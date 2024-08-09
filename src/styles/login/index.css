@@ -1,0 +1,41 @@
+.login-container {
+  width: 100vw;
+  height: 100vh;
+}
+
+/* Main form container */
+.form-container {
+  width: 100%;
+  height: 100%;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  align-items: center;
+  padding: 0 20px;
+  /* align-content: space-around; */
+}
+
+.form-container form {
+  margin-top: 20vh;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  width: 100%;
+  gap: 15px;
+  /* align-self: flex-end; */
+}
+
+/* Title */
+.form-container h1:first-child {
+  margin-bottom: -20px;
+}
+/* Footer description */
+.form-container p:last-child {
+  margin-bottom: 30px;
+}
+
+@media (min-width: 600px) {
+  .form-container form {
+    width: 400px;
+  }
+}

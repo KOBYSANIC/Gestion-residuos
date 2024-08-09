@@ -1,0 +1,136 @@
+body {
+  margin: 0;
+  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", "Roboto", "Oxygen",
+    "Ubuntu", "Cantarell", "Fira Sans", "Droid Sans", "Helvetica Neue",
+    sans-serif;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+/* Estilos para el scrollbar */
+/* Ancho del scrollbar */
+::-webkit-scrollbar {
+  width: 6px;
+  height: 6px;
+}
+
+/* Fondo del scrollbar */
+::-webkit-scrollbar-track {
+  background: #1B1C1B;
+}
+
+/* Color de resaltado en la web */
+::selection {
+  background-color: #19F575;
+}
+
+/* Color del scrollbar */
+::-webkit-scrollbar-thumb {
+  background-color: #4c4c4c;
+  /* Borde del scrollbar */
+  border-radius: 6px;
+}
+
+/* Cambiar el color del scrollbar al pasar el ratón sobre él */
+::-webkit-scrollbar-thumb:hover {
+  background-color: #a9a9a9;
+}
+
+/* Estilos para Firefox */
+* {
+  scrollbar-color: #4c4c4c #1B1C1B;
+  scrollbar-width: thin;
+}
+
+/* Estilos al pasar el ratón sobre el scrollbar en Firefox */
+*:hover {
+  scrollbar-color: #a9a9a9 #1B1C1B;
+}
+
+code {
+  font-family: source-code-pro, Menlo, Monaco, Consolas, "Courier New",
+    monospace;
+}
+
+nav a.active {
+  font-weight: bold;
+  color: royalblue;
+}
+
+@keyframes parpadeo-imagen {
+
+  0%,
+  100% {
+    opacity: 1;
+    /* Imagen completamente visible */
+  }
+
+  50% {
+    opacity: 0;
+    /* Imagen invisible */
+  }
+}
+
+.img-warning {
+  animation: parpadeo-imagen 1s infinite;
+  /* La animación dura 1 segundo y se repite infinitamente */
+}
+
+.image-gallery-thumbnails {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.image-gallery-thumbnail.active,
+.image-gallery-thumbnail:focus {
+  border: 4px solid #1562e8;
+}
+
+.jodit-ui-group {
+  background-color: #1B1C1B;
+}
+
+.jodit-react-container:focus-within {
+  border: 1px solid;
+  border-color: #19F575;
+}
+
+.react-select-container {
+  .react-select__control {
+    background-color: var(--bg-secondary);
+    border-color: var(--border-color);
+    transition: none;
+
+    &:hover {
+      border-color: var(--border-color);
+    }
+  }
+
+  .react-select__menu {
+    background-color: var(--bg-secondary);
+    border: 1px solid var(--border-color);
+  }
+
+  .react-select__option {
+    background-color: var(--bg-secondary);
+
+    &:hover {
+      background-color: var(--bg-primary);
+    }
+  }
+
+  .react-select__indicator-separator {
+    background-color: var(--border-color);
+  }
+
+  .react-select__placeholder,
+  .react-select__single-value {
+    color: var(--text-primary);
+  }
+}
+
+input[type="date"]::-webkit-calendar-picker-indicator {
+  filter: invert(1);
+  cursor: pointer;
+}
