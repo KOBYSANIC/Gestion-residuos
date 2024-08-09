@@ -20,7 +20,11 @@ import {
   where,
 } from "firebase/firestore";
 
-import { user_status_select, user_role_select } from "../../Utils/constants";
+import {
+  user_status_select,
+  user_role_select,
+  CLIENTE,
+} from "../../Utils/constants";
 
 import toast from "react-hot-toast";
 import { ADMINISTRADOR, VENDEDOR } from "../../Utils/constants";
@@ -37,7 +41,7 @@ export const loginToApp = createAsyncThunk(
 
       if (docSnap.exists()) {
         const role = docSnap.data().role;
-        if (![ADMINISTRADOR, VENDEDOR].includes(role)) {
+        if (![ADMINISTRADOR, VENDEDOR, CLIENTE].includes(role)) {
           toast.error("Lo sentimos, no tienes acceso a esta aplicación");
           auth.signOut();
           dispatch(logout());

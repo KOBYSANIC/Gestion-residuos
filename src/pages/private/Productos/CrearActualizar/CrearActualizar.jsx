@@ -14,16 +14,9 @@ import {
 } from "../../../../redux/features/productoSlice";
 
 // components
-import ModalFormMultiStep from "../../../../components/Modal/ModalFormMultiStep";
-import ProductoForm from "./ProductoForm";
-import PreciosForm from "./PreciosForm";
 import DatosCompraForm from "./DatosCompraForm";
-
-const steps = [
-  { label: "Datos Generales" },
-  { label: "Control de Precios" },
-  { label: "Datos de Compra" },
-];
+import ModalForm from "../../../../components/Modal/ModalForm";
+import { Skeleton } from "@chakra-ui/react";
 
 const CrearActualizar = ({ isOpen, onClose }) => {
   const dispatch = useDispatch();
@@ -32,8 +25,8 @@ const CrearActualizar = ({ isOpen, onClose }) => {
   const productoSelected = useSelector(selectProductoDataUpdate);
   const loading = useSelector(loadingActions);
   const isUpdate = useSelector(selectIsUpdate);
-  const modalTitle = isUpdate ? "Editar Producto" : "Nuevo Producto";
-  const buttonTitle = isUpdate ? "Actualizar Producto" : "Agregar Producto";
+  const modalTitle = isUpdate ? "Editar Residuo" : "Nuevo Residuo";
+  const buttonTitle = isUpdate ? "Actualizar Residuo" : "Nuevo Residuo";
 
   const {
     register,
@@ -41,20 +34,11 @@ const CrearActualizar = ({ isOpen, onClose }) => {
     formState: { errors },
     reset,
     control,
-    watch,
   } = useForm();
 
   const loading_save = useSelector(loadingActions);
 
   const onSubmit = (data) => {
-    data.tags = data.tags ? data.tags.map((item) => item.value) : [];
-
-    data.datos_compra = data.datos_compra.map((item) => {
-      return {
-        ...item,
-        name_input: item.name_input.toLowerCase().replace(/ /g, "_"),
-      };
-    });
 
     if (isUpdate) {
       dispatch(updateProducto({ ...data, onClose, reset }));
@@ -71,20 +55,9 @@ const CrearActualizar = ({ isOpen, onClose }) => {
     }
   }, [isUpdate, productoSelected]);
 
-  const forms = [
-    <ProductoForm errors={errors} register={register} control={control} />,
-    <PreciosForm
-      errors={errors}
-      register={register}
-      watch={watch}
-      control={control}
-    />,
-    <DatosCompraForm errors={errors} register={register} control={control} />,
-  ];
-
   return (
     <>
-      <ModalFormMultiStep
+      <ModalForm
         titleModal={modalTitle}
         isOpen={isOpen}
         onClose={onClose}
@@ -94,12 +67,32 @@ const CrearActualizar = ({ isOpen, onClose }) => {
         textButtonSubmit={buttonTitle}
         loadingButtonSubmit={loading_save}
         isCentered={false}
-        steps={steps}
-        forms={forms}
-        loading={loading}
-        isUpdate={isUpdate}
-        errors={errors}
-      />
+      >
+        {loading && isUpdate ? (
+          <>
+            <Skeleton
+              height="80px"
+              boxShadow="card"
+              borderRadius="10px"
+              startColor="brand.disabled"
+              endColor="brand.gray3"
+            />
+            <Skeleton
+              height="80px"
+              boxShadow="card"
+              borderRadius="10px"
+              startColor="brand.disabled"
+              endColor="brand.gray3"
+            />
+          </>
+        ) : (
+          <DatosCompraForm
+            errors={errors}
+            register={register}
+            control={control}
+          />
+        )}
+      </ModalForm>
     </>
   );
 };

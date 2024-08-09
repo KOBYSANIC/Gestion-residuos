@@ -10,7 +10,7 @@ import {
 import { faRectangleList } from "@fortawesome/free-regular-svg-icons";
 
 // constants
-import { ADMINISTRADOR, VENDEDOR } from "../Utils/constants";
+import { ADMINISTRADOR, CLIENTE, VENDEDOR } from "../Utils/constants";
 
 // pages
 // private
@@ -24,89 +24,44 @@ import { UsuarioList, SolicitudList } from "../pages/private/Usuarios";
 
 // public
 import LoginScreen from "../pages/public/LoginScreen";
-import { PlataformasList } from "../pages/private/CategoriasMarcas/Plataformas";
-import { MetodosPago } from "../pages/private/GestionMonedas/MetodosPago";
 
 export const routes = [
   // private routes
   {
     name: "Residuos",
     icon: faBoxesStacked,
-    path: "/control_productos",
+    path: "/residuos",
     component: ProductosList,
     isPrivate: true,
     showSidebar: true,
-    accessValidate: [ADMINISTRADOR],
+    accessValidate: [ADMINISTRADOR, CLIENTE],
   },
   {
     name: "Recolecciones",
     icon: faTags,
     path: "/configuraciones",
+    component: CategoriasList,
     isPrivate: true,
     showSidebar: true,
     accessValidate: [ADMINISTRADOR],
-    subMenu: [
-      {
-        name: "Categorias",
-        path: "/configuraciones/categorias",
-        component: CategoriasList,
-      },
-      {
-        name: "Marcas",
-        path: "/configuraciones/marcas",
-        component: MarcasList,
-      },
-      {
-        name: "Plataformas",
-        path: "/configuraciones/plataformas",
-        component: PlataformasList,
-      },
-    ],
   },
   {
     name: "Rutas",
     icon: faMoneyBillTransfer,
     path: "/conf_financiera",
+    component: MonedasList,
     isPrivate: true,
     showSidebar: true,
     accessValidate: [ADMINISTRADOR],
-    subMenu: [
-      {
-        name: "Conversión de Monedas",
-        path: "/conf_financiera/conversion_monedas",
-        component: MonedasList,
-      },
-      {
-        name: "Bancos",
-        path: "/conf_financiera/bancos",
-        component: BancosList,
-      },
-      {
-        name: "Métodos de Pago",
-        path: "/conf_financiera/metodos_pago",
-        component: MetodosPago,
-      },
-    ],
   },
   {
     name: "Vehículos",
     icon: faCartShopping,
     path: "/ventas",
+    component: VentasList,
     isPrivate: true,
     showSidebar: true,
     accessValidate: [ADMINISTRADOR, VENDEDOR],
-    subMenu: [
-      {
-        name: "Productos",
-        path: "/ventas/productos",
-        component: VentasList,
-      },
-      {
-        name: "Tokens",
-        path: "/ventas/tokens",
-        component: TokensList,
-      },
-    ],
   },
 
   {
@@ -122,6 +77,7 @@ export const routes = [
     name: "Ajustes",
     icon: faSliders,
     path: "/ajustes",
+    component: CarruselList,
     isPrivate: true,
     showSidebar: true,
     accessValidate: [ADMINISTRADOR],
@@ -131,32 +87,16 @@ export const routes = [
         path: "/ajustes/carrusel",
         component: CarruselList,
       },
-      {
-        name: "Preguntas Frecuentes",
-        path: "/ajustes/preguntas_frecuentes",
-        component: PreguntasList,
-      },
     ],
   },
   {
     name: "Usuarios",
     icon: faUsers,
     path: "/control_usuarios",
+    component: UsuarioList,
     isPrivate: true,
     showSidebar: true,
     accessValidate: [ADMINISTRADOR],
-    subMenu: [
-      {
-        name: "Usuarios",
-        path: "/control_usuarios/usuarios",
-        component: UsuarioList,
-      },
-      {
-        name: "Soliciudes",
-        path: "/control_usuarios/solicitudes",
-        component: SolicitudList,
-      },
-    ],
   },
   // public routes
   {

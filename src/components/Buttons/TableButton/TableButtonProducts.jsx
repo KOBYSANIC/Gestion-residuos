@@ -30,12 +30,12 @@ const TableButtonProducts = ({
 
   const items = [
     {
-      name: "Editar producto",
+      name: "Editar residuo",
       onClick: handleUpdate,
       hidden: false,
     },
     {
-      name: "Eliminar producto",
+      name: "Eliminar residuo",
       onClick: handleOnClick,
       hidden: false,
     },

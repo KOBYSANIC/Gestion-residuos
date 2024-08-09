@@ -5,7 +5,7 @@ import { createAsyncThunk, createSlice } from "@reduxjs/toolkit";
 import { db, uploadFiles } from "../../firebase/config";
 
 // constants
-import { document_info } from "../../Utils/constants";
+import { ADMINISTRADOR, document_info } from "../../Utils/constants";
 
 // firebase
 import {
@@ -32,15 +32,26 @@ import { v4 as uuidv4 } from "uuid";
 // -----------------------------------------Funciones-----------------------------------------
 
 // Funcion para obtener la query global
-const getQuery = (productosCollection, search, sort = "asc") => {
-  return query(
-    productosCollection,
-    where("active", "==", true),
-    where("buscar_nombre", ">=", search.toLowerCase()),
-    where("buscar_nombre", "<=", search.toLowerCase() + "\uf8ff"),
-    orderBy("buscar_nombre", sort),
-    limit(10)
-  );
+const getQuery = (productosCollection, search, sort = "desc", uid) => {
+  let querValidate;
+  if (uid) {
+    querValidate = query(
+      productosCollection,
+      where("active", "==", true),
+      where("user", "==", uid),
+      orderBy("fecha_recoleccion", sort),
+      limit(10)
+    );
+  } else {
+    querValidate = query(
+      productosCollection,
+      where("active", "==", true),
+      orderBy("fecha_recoleccion", sort),
+      limit(10)
+    );
+  }
+
+  return querValidate;
 };
 
 // Funcion para obtener todos los productos de la base de datos
@@ -53,7 +64,7 @@ export const getProductos = createAsyncThunk(
     try {
       const productos = [];
 
-      const productosCollection = collection(db, "productos");
+      const productosCollection = collection(db, "residuos");
       const {
         lastVisible,
         firstVisible,
@@ -62,13 +73,21 @@ export const getProductos = createAsyncThunk(
 
       let querySnapshot = null;
 
+      const { user } = getState().user;
+
+      let uid = user?.uid;
+
+      if (user.role === ADMINISTRADOR) {
+        uid = "";
+      }
+
       if (!isNextPage && !isPrevPage) {
-        const q = getQuery(productosCollection, search);
+        const q = getQuery(productosCollection, search, "asc", uid);
         querySnapshot = await getDocs(q);
       }
 
       if (_productos.length === 0 && isPrevPage) {
-        const q = getQuery(productosCollection, search, "desc");
+        const q = getQuery(productosCollection, search, "desc", uid);
         querySnapshot = await getDocs(q);
         dispatch(resetPage());
       }
@@ -112,6 +131,7 @@ export const getProductos = createAsyncThunk(
       });
       return productos;
     } catch (err) {
+      console.log(err.message);
       toast.error(err.message);
       return rejectWithValue(err);
     }
@@ -122,8 +142,9 @@ export const getProductos = createAsyncThunk(
 export const eliminarProducto = createAsyncThunk(
   "producto/eliminarProducto",
   async (producto_id, { dispatch, rejectWithValue }) => {
+    console.log("pase aqui");
     try {
-      const docRef = doc(db, "productos", producto_id);
+      const docRef = doc(db, "residuos", producto_id);
 
       const updateTimestamp = updateDoc(docRef, {
         active: false,
@@ -132,8 +153,8 @@ export const eliminarProducto = createAsyncThunk(
 
       await toast.promise(updateTimestamp, {
         loading: "Eliminando...",
-        success: "Producto eliminado",
-        error: "Error al eliminar el producto",
+        success: "Residuo eliminado",
+        error: "Error al eliminar el residuo",
       });
 
       dispatch(resetPage());
@@ -141,6 +162,7 @@ export const eliminarProducto = createAsyncThunk(
 
       return docRef;
     } catch (err) {
+      console.log(err.message);
       return rejectWithValue(err);
     }
   }
@@ -151,25 +173,17 @@ export const getProducto = createAsyncThunk(
   "producto/getProducto",
   async (producto_id, { rejectWithValue }) => {
     try {
-      const docRef = doc(db, "productos", producto_id);
+      const docRef = doc(db, "residuos", producto_id);
       const docSnap = await getDoc(docRef);
 
       if (docSnap.exists()) {
-        const tagsFormated = [];
-
-        docSnap.data()?.tags &&
-          docSnap.data().tags.map((tag) => {
-            tagsFormated.push({ value: tag, label: tag });
-          });
-
         return {
           ...docSnap.data(),
           id: docSnap.id,
-          tags: tagsFormated,
         };
       } else {
-        toast.error("No se encontró el producto");
-        return rejectWithValue("No se encontró el producto");
+        toast.error("No se encontró el residuo");
+        return rejectWithValue("No se encontró el residuo");
       }
     } catch (err) {
       return rejectWithValue(err);
@@ -180,52 +194,38 @@ export const getProducto = createAsyncThunk(
 // funcion para crear un producto
 export const createProducto = createAsyncThunk(
   "producto/createProducto",
-  async (params, { dispatch, rejectWithValue }) => {
+  async (params, { dispatch, rejectWithValue, getState }) => {
     try {
       const { onClose, reset, ...data } = params;
 
-      const { imagen_miniatura, imagen_portada, nombre_producto } = data;
-
       // add uid to precios
-      const preciosWithUid = data.precios.map((precio) => {
+      const preciosWithUid = data.residuos.map((precio) => {
         return { ...precio, id: uuidv4() };
       });
 
-      const buscar_nombre = nombre_producto.toLowerCase();
+      // --- estados
+      // generado       0
+      // recolectado    1
+      // finalizado     2
+      // cancelado      3
+      // no recolectado 4
 
-      const isDuplicate = await checkDuplicateValue(
-        "productos",
-        "nombre_producto",
-        nombre_producto
-      );
+      // obtener data de otra store de redux
+      const { user } = getState().user;
 
-      if (isDuplicate) {
-        toast.error("Nombre del producto duplicado");
-        return rejectWithValue("Producto duplicado");
-      }
-
-      const slug = nombre_producto
-        .toLowerCase()
-        .replace(/[!*'();:@&=+$,\/?%#\[\] ]/g, "_");
-
-      const images_url = await uploadFiles(imagen_miniatura, "productos");
-      const images_url_portada = await uploadFiles(imagen_portada, "productos");
-
-      const new_producto = addDoc(collection(db, "productos"), {
-        ...document_info,
+      const new_producto = addDoc(collection(db, "residuos"), {
         ...data,
-        precios: preciosWithUid,
-        slug,
-        imagen_miniatura: images_url,
-        imagen_portada: images_url_portada,
-        buscar_nombre,
-        cantidad_vendidos: 0,
+        residuos: preciosWithUid,
+        active: true,
+        estado: 0,
+        created_at: new Date(),
+        user: user?.uid,
       });
 
       await toast.promise(new_producto, {
         loading: "Creando...",
-        success: "Producto creado",
-        error: "Error al crear el producto",
+        success: "Residuo creado",
+        error: "Error al crear el residuo",
       });
 
       dispatch(resetPage());
@@ -235,6 +235,7 @@ export const createProducto = createAsyncThunk(
       reset();
 
       return new_producto;
+      return;
     } catch (err) {
       toast.error(err.message);
       return rejectWithValue(err);
@@ -249,61 +250,21 @@ export const updateProducto = createAsyncThunk(
     try {
       const { id, onClose, reset, ...data } = params;
 
-      const { imagen_miniatura, imagen_portada, nombre_producto, precios } =
-        data;
-
       // add uid to precios
-      const preciosWithUid = precios.map((precio) => {
+      const preciosWithUid = data.residuos.map((precio) => {
         return { ...precio, id: precio.id || uuidv4() };
       });
 
-      const buscar_nombre = nombre_producto.toLowerCase();
-
-      const isDuplicate = await checkDuplicateValue(
-        "productos",
-        "nombre_producto",
-        nombre_producto,
-        id
-      );
-
-      if (isDuplicate) {
-        toast.error("Nombre del producto duplicado");
-        return rejectWithValue("Producto duplicado");
-      }
-
-      const slug = nombre_producto
-        .toLowerCase()
-        .replace(/[!*'();:@&=+$,\/?%#\[\] ]/g, "_");
-
-      // Verificar si la imagen del producto ha cambiado
-      const images_url = await validateImage(
-        id,
-        imagen_miniatura,
-        "imagen_miniatura",
-        "productos"
-      );
-
-      const images_url_portada = await validateImage(
-        id,
-        imagen_portada,
-        "imagen_portada",
-        "productos"
-      );
-
-      const producto = updateDoc(doc(db, "productos", id), {
+      const producto = updateDoc(doc(db, "residuos", id), {
         ...data,
-        slug,
-        precios: preciosWithUid,
+        residuos: preciosWithUid,
         updated_at: new Date(),
-        imagen_miniatura: images_url,
-        imagen_portada: images_url_portada,
-        buscar_nombre,
       });
 
       await toast.promise(producto, {
         loading: "Actualizando...",
-        success: "Producto actualizado",
-        error: "Error al actualizar el Producto",
+        success: "Residuo actualizado",
+        error: "Error al actualizar el residuo",
       });
 
       onClose();
@@ -314,6 +275,7 @@ export const updateProducto = createAsyncThunk(
 
       return producto;
     } catch (err) {
+      console.log(err.message);
       return rejectWithValue(err);
     }
   }

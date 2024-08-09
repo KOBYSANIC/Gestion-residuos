@@ -20,8 +20,8 @@ const EliminarProducto = ({ isOpen, onClose }) => {
   };
   return (
     <ModalAlert
-      subTitleText={`Estas por eliminar el producto ${productSelected?.nombre_producto}.`}
-      description="Al eliminar el producto, ya no podras recuperarlo, "
+      subTitleText={"Estas por eliminar el residuo"}
+      description="Al eliminar el resdiuo, ya no podras recuperarlo, "
       emphasisDescription="esta accion no se podrá revertir."
       isOpen={isOpen}
       onClose={onClose}

@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import React, { useEffect } from "react";
 
 // components
 import HeaderViewContent from "../../../../components/HeaderViewContent";
@@ -27,8 +27,7 @@ import { useDispatch, useSelector } from "react-redux";
 // chakra
 import { useDisclosure } from "@chakra-ui/react";
 
-const ProductosList = () => {
-  const [search, setSearch] = useState("");
+const  ProductosList = () => {
   const dispatch = useDispatch();
 
   // modal eliminar
@@ -84,23 +83,11 @@ const ProductosList = () => {
       <EliminarProducto isOpen={isOpenEliminar} onClose={onCloseEliminar} />
 
       <HeaderViewContent
-        titleView="Productos"
-        textButton="Nuevo producto"
+        titleView="Residuos"
+        textButton="Nuevo residuo"
+        showSearchButton={false}
         showFilterButton={false}
         onOpen={onOpenCreate}
-        onKeyPress={(e) =>
-          e.key === "Enter"
-            ? dispatch(
-                getProductos({
-                  search: search,
-                  isNextPage: false,
-                  isPrevPage: false,
-                })
-              )
-            : null
-        }
-        onChange={(e) => setSearch(e.target.value)}
-        searchTitle="Buscar por nombre"
       />
 
       <Table

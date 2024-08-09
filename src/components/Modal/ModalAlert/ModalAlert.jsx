@@ -58,7 +58,7 @@ const ModalAlert = ({
             <TextContent content={subTitleText} />
           </AlertDialogHeader>
           {/* <AlertDialogCloseButton /> */}
-          <form onSubmit={onSubmit}>
+          {/* <form onSubmit={onSubmit}> */}
             <AlertDialogBody minHeight="20vh">
               <TextContent>
                 {description}
@@ -84,7 +84,7 @@ const ModalAlert = ({
                 }}
               />
             </AlertDialogFooter>
-          </form>
+          {/* </form> */}
         </AlertDialogContent>
       </AlertDialog>
     </>
