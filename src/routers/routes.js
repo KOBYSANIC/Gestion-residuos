@@ -10,7 +10,7 @@ import {
 import { faRectangleList } from "@fortawesome/free-regular-svg-icons";
 
 // constants
-import { ADMINISTRADOR, CLIENTE, VENDEDOR } from "../Utils/constants";
+import { ADMINISTRADOR, CLIENTE, TRANSPORTISTA } from "../Utils/constants";
 
 // pages
 // private
@@ -39,11 +39,11 @@ export const routes = [
   {
     name: "Recolecciones",
     icon: faTags,
-    path: "/configuraciones",
-    component: CategoriasList,
+    path: "/recolecciones",
+    component: VentasList,
     isPrivate: true,
     showSidebar: true,
-    accessValidate: [ADMINISTRADOR],
+    accessValidate: [ADMINISTRADOR, TRANSPORTISTA],
   },
   {
     name: "Rutas",
@@ -61,7 +61,7 @@ export const routes = [
     component: VentasList,
     isPrivate: true,
     showSidebar: true,
-    accessValidate: [ADMINISTRADOR, VENDEDOR],
+    accessValidate: [ADMINISTRADOR, TRANSPORTISTA],
   },
 
   {

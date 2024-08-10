@@ -21,37 +21,18 @@ import {
 
 // toast
 import toast from "react-hot-toast";
-import {
-  CANCELADO_ORDER,
-  COMPLETADO,
-  GENERADO_ORDER,
-  PAGO_CONFIRMADO,
-  REEMBOLSO_REALIZADO,
-  array_error_order,
-} from "../../Utils/constants";
-import { convertStatus } from "../../Utils/functions";
 
 import moment from "moment";
 // -----------------------------------------Funciones-----------------------------------------
 
 // Funcion para obtener la query global
 const getQuery = (ventasCollection, search, sort = "desc") => {
-  const q = search
-    ? query(
-        ventasCollection,
-        where("numero_orden", ">=", search.toLowerCase()),
-        where("numero_orden", "<=", search.toLowerCase() + "\uf8ff"),
-        orderBy("numero_orden", sort),
-        limit(10)
-      )
-    : query(
-        ventasCollection,
-        where("active", "==", true),
-        orderBy("created_at", sort),
-        limit(10)
-      );
-
-  return q;
+  return query(
+    ventasCollection,
+    where("active", "==", true),
+    orderBy("fecha_recoleccion", sort),
+    limit(10)
+  );
 };
 
 const parceDate = (date, fecha_fin = false) => {
@@ -69,7 +50,7 @@ const getQueryFilter = (ventasCollection, search, filter, sort = "desc") => {
         where("numero_orden", ">=", search.toLowerCase()),
         where("numero_orden", "<=", search.toLowerCase() + "\uf8ff"),
         filter?.order_state && filter?.order_state?.value !== ""
-          ? where("status", "==", filter?.order_state?.value)
+          ? where("estado", "==", filter?.order_state?.value)
           : where("active", "==", true),
         filter?.id_user !== "" && filter?.id_user?.id !== ""
           ? where("usuario.uid", "==", filter?.id_user?.id)
@@ -81,18 +62,15 @@ const getQueryFilter = (ventasCollection, search, filter, sort = "desc") => {
         ventasCollection,
         where("active", "==", true),
         filter?.order_state && filter?.order_state?.value !== ""
-          ? where("status", "==", filter.order_state.value)
-          : where("active", "==", true),
-        filter?.id_user !== "" && filter?.id_user?.id !== ""
-          ? where("usuario.uid", "==", filter?.id_user?.id)
+          ? where("estado", "==", filter.order_state.value)
           : where("active", "==", true),
         filter?.fecha_inicio !== ""
-          ? where("created_at", ">=", parceDate(filter?.fecha_inicio))
+          ? where("fecha_recoleccion", ">=", filter?.fecha_inicio)
           : where("active", "==", true),
         filter?.fecha_fin !== ""
-          ? where("created_at", "<=", parceDate(filter?.fecha_fin, true))
+          ? where("fecha_recoleccion", "<=", filter?.fecha_fin)
           : where("active", "==", true),
-        orderBy("created_at", sort),
+        orderBy("fecha_recoleccion", sort),
         limit(10)
       );
 
@@ -109,7 +87,7 @@ export const getVentas = createAsyncThunk(
     try {
       const ventas = [];
 
-      const ventasCollection = collection(db, "ventas");
+      const ventasCollection = collection(db, "residuos");
       const { lastVisible, firstVisible, ventas: _ventas } = getState().venta;
 
       let querySnapshot = null;
@@ -206,7 +184,7 @@ export const getOrder = createAsyncThunk(
   "venta/getOrder",
   async (order_id, { rejectWithValue }) => {
     try {
-      const docRef = doc(db, "ventas", order_id);
+      const docRef = doc(db, "residuos", order_id);
       const docSnap = await getDoc(docRef);
 
       if (docSnap.exists()) {
@@ -215,8 +193,8 @@ export const getOrder = createAsyncThunk(
           id: docSnap.id,
         };
       } else {
-        toast.error("No se encontró la orden");
-        return rejectWithValue("No se encontró la orden");
+        toast.error("No se encontró el residuo");
+        return rejectWithValue("No se encontró el residuo");
       }
     } catch (err) {
       return rejectWithValue(err);
@@ -337,149 +315,37 @@ const updateNormal = async (
 export const changeState = createAsyncThunk(
   "venta/changeState",
   async (
-    { venta_id, status, motivo_cancelacion = "", comentario_error = "" },
+    {
+      id,
+      status,
+      monto_cobrado = 0,
+      comentario_reciclador = "",
+      fecha_recoleccion_reciclador = "",
+    },
     { dispatch, rejectWithValue }
   ) => {
     try {
-      const docRef = doc(db, "ventas", venta_id);
+      const docRef = doc(db, "residuos", id);
 
-      const docSnap = await getDoc(docRef);
+      const pregunta = updateDoc(doc(db, "residuos", id), {
+        estado: status,
+        comentario_reciclador,
+        monto_cobrado,
+        fecha_recoleccion_reciclador,
+      });
 
-      if (!docSnap.exists()) {
-        toast.error("No se encontró la orden");
-        return rejectWithValue("No se encontró la orden");
-      }
-
-      if (docSnap.data().status === CANCELADO_ORDER) {
-        toast.error("La orden ya fue cancelada");
-        dispatch(resetPage());
-        dispatch(getVentas({ isNextPage: false, isPrevPage: false }));
-        return rejectWithValue("La orden ya fue cancelada");
-      }
-
-      if (docSnap.data().status === COMPLETADO) {
-        toast.error("La orden ya fue completada");
-        dispatch(resetPage());
-        dispatch(getVentas({ isNextPage: false, isPrevPage: false }));
-        return rejectWithValue("La orden ya fue completada");
-      }
-
-      if (docSnap.data().status === REEMBOLSO_REALIZADO) {
-        toast.error("La orden ya fue reembolsada");
-        dispatch(resetPage());
-        dispatch(getVentas({ isNextPage: false, isPrevPage: false }));
-        return rejectWithValue("La orden ya fue reembolsada");
-      }
-
-      if (
-        status === CANCELADO_ORDER &&
-        docSnap.data().status !== GENERADO_ORDER
-      ) {
-        toast.error(
-          `No puedes cancelar una orden con el estado "${
-            convertStatus(docSnap.data().status)?.name
-          }"`
-        );
-        dispatch(resetPage());
-        dispatch(getVentas({ isNextPage: false, isPrevPage: false }));
-        return rejectWithValue("No puedes cancelar una orden con este estado");
-      }
-
-      if (docSnap.data().status === status) {
-        toast.error(
-          `La orden ya fue actualizada a "${
-            convertStatus(status)?.name
-          }" anteriormente`
-        );
-        dispatch(resetPage());
-        dispatch(getVentas({ isNextPage: false, isPrevPage: false }));
-        return rejectWithValue("La orden ya tiene este estado");
-      }
-
-      if (
-        array_error_order.includes(docSnap.data().status) &&
-        array_error_order.includes(status)
-      ) {
-        toast.error(
-          `La orde ya fue actualizda a "${
-            convertStatus(docSnap.data().status)?.name
-          }", no puedes volver a asignar un estado de error a esta orden`
-        );
-        dispatch(resetPage());
-        dispatch(getVentas({ isNextPage: false, isPrevPage: false }));
-        return rejectWithValue("Debe ingresar un motivo de cancelación");
-      }
-
-      if (
-        docSnap.data().status !== GENERADO_ORDER &&
-        docSnap.data().status !== PAGO_CONFIRMADO &&
-        !array_error_order.includes(docSnap.data().status) &&
-        array_error_order.includes(status)
-      ) {
-        toast.error(
-          `No puedes asignar un estado de error a una orden con el estado "${
-            convertStatus(docSnap.data().status)?.name
-          }"`
-        );
-        dispatch(resetPage());
-        dispatch(getVentas({ isNextPage: false, isPrevPage: false }));
-        return rejectWithValue("Debe ingresar un motivo de cancelación");
-      }
-
-      if (
-        (status === PAGO_CONFIRMADO || status === COMPLETADO) &&
-        docSnap.data().status !== GENERADO_ORDER &&
-        docSnap.data().status !== PAGO_CONFIRMADO
-      ) {
-        toast.error(
-          `No puedes asignar un estado de "${
-            convertStatus(status)?.name
-          }" a una orden con el estado "${
-            convertStatus(docSnap.data().status)?.name
-          }"`
-        );
-        dispatch(resetPage());
-        dispatch(getVentas({ isNextPage: false, isPrevPage: false }));
-        return rejectWithValue("Debe ingresar un motivo de cancelación");
-      }
-
-      if (
-        !array_error_order.includes(docSnap.data().status) &&
-        status === REEMBOLSO_REALIZADO
-      ) {
-        toast.error(
-          `No puedes reembolsar una orden con el estado "${
-            convertStatus(docSnap.data().status)?.name
-          }"`
-        );
-        dispatch(resetPage());
-        dispatch(getVentas({ isNextPage: false, isPrevPage: false }));
-        return rejectWithValue("Debe ingresar un motivo de cancelación");
-      }
-
-      if (status === COMPLETADO) {
-        // transaction atomic
-        await updateTransaction(
-          venta_id,
-          status,
-          motivo_cancelacion,
-          comentario_error
-        );
-      } else {
-        await updateNormal(
-          docRef,
-          docSnap,
-          status,
-          motivo_cancelacion,
-          comentario_error
-        );
-      }
+      await toast.promise(pregunta, {
+        loading: "Actualizando...",
+        success: "Estado de la recolección actualizado",
+        error: "Error al editar la recolección",
+      });
 
       dispatch(resetPage());
       dispatch(getVentas({ isNextPage: false, isPrevPage: false }));
 
       return docRef;
     } catch (err) {
+      console.log(err);
       return rejectWithValue(err);
     }
   }

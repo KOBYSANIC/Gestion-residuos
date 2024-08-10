@@ -3,8 +3,11 @@ import TableButton from "./TableButton";
 import {
   CANCELADO_ORDER,
   COMPLETADO,
+  FINALIZADO_RESIDUO,
   GENERADO_ORDER,
+  GENERADO_RESIDUO,
   PAGO_CONFIRMADO,
+  RECOLECTADO_RESIDUO,
   REEMBOLSO_REALIZADO,
 } from "../../../Utils/constants";
 import { useDispatch } from "react-redux";
@@ -22,49 +25,6 @@ const TableButtonVenta = ({
   const dispatch = useDispatch();
   const items = [
     {
-      name: "Administrar",
-      onClick: () => {
-        setVentaID(row.values.id);
-        dispatch(getOrder(row.values.id));
-        setIsView(false);
-        onOpen2();
-      },
-      hidden:
-        row.values.status !== GENERADO_ORDER &&
-        row.values.status !== PAGO_CONFIRMADO,
-    },
-    {
-      name: "Marcar como reembolsado",
-      onClick: () => {
-        onOpen5();
-        setVentaID(row.values.id);
-      },
-      hidden:
-        row.values.status === GENERADO_ORDER ||
-        row.values.status === PAGO_CONFIRMADO ||
-        row.values.status === COMPLETADO ||
-        row.values.status === CANCELADO_ORDER ||
-        row.values.status === REEMBOLSO_REALIZADO,
-    },
-    {
-      name: "Marcar un error",
-      onClick: () => {
-        onOpen4();
-        setVentaID(row.values.id);
-      },
-      hidden:
-        row.values.status !== GENERADO_ORDER &&
-        row.values.status !== PAGO_CONFIRMADO,
-    },
-    {
-      name: "Cancelar venta",
-      onClick: () => {
-        onOpen();
-        setVentaID(row.values.id);
-      },
-      hidden: row.values.status !== GENERADO_ORDER,
-    },
-    {
       name: "Ver detalles",
       onClick: () => {
         setVentaID(row.values.id);
@@ -72,9 +32,41 @@ const TableButtonVenta = ({
         dispatch(getOrder(row.values.id));
         onOpen2();
       },
-      hidden:
-        row.values.status === GENERADO_ORDER ||
-        row.values.status === PAGO_CONFIRMADO,
+      hidden: row.values.estado === GENERADO_RESIDUO,
+    },
+    {
+      name: "Administrar",
+      onClick: () => {
+        setVentaID(row.values.id);
+        dispatch(getOrder(row.values.id));
+        setIsView(false);
+        onOpen2();
+      },
+      hidden: row.values.estado !== GENERADO_RESIDUO,
+    },
+    {
+      name: "Marcar como finalizado",
+      onClick: () => {
+        onOpen5();
+        setVentaID(row.values.id);
+      },
+      hidden: row.values.estado !== RECOLECTADO_RESIDUO,
+    },
+    {
+      name: "Marcar como no recolectado",
+      onClick: () => {
+        onOpen4();
+        setVentaID(row.values.id);
+      },
+      hidden: row.values.estado !== GENERADO_RESIDUO,
+    },
+    {
+      name: "Cancelar recolección",
+      onClick: () => {
+        onOpen();
+        setVentaID(row.values.id);
+      },
+      hidden: row.values.estado !== GENERADO_RESIDUO,
     },
   ];
 

@@ -14,6 +14,45 @@ import Button from "../../Buttons/Button";
 import TextContent from "../../Texts/TextContent";
 import Title from "../../Texts/Title";
 
+const Content = ({
+  description,
+  emphasisDescription,
+  onClose,
+  onContinue,
+  children,
+  onSubmit,
+}) => {
+  return (
+    <>
+      <AlertDialogBody minHeight="20vh">
+        <TextContent>
+          {description}
+          <strong>{emphasisDescription}</strong>
+        </TextContent>
+        {children}
+      </AlertDialogBody>
+      <AlertDialogFooter
+        display="flex"
+        flexDirection={{ base: "column-reverse", md: "row" }}
+        justifyContent="space-between"
+        gap={{ base: 4, md: 0 }}
+      >
+        <Button primary onClick={onClose} text="Cancelar" />
+        <Button
+          secondary
+          type="submit"
+          text="Continuar"
+          onClick={() => {
+            if (onSubmit) return;
+            onClose();
+            onContinue();
+          }}
+        />
+      </AlertDialogFooter>
+    </>
+  );
+};
+
 const ModalAlert = ({
   subTitleText,
   description,
@@ -58,33 +97,31 @@ const ModalAlert = ({
             <TextContent content={subTitleText} />
           </AlertDialogHeader>
           {/* <AlertDialogCloseButton /> */}
-          {/* <form onSubmit={onSubmit}> */}
-            <AlertDialogBody minHeight="20vh">
-              <TextContent>
-                {description}
-                <strong>{emphasisDescription}</strong>
-              </TextContent>
-              {children}
-            </AlertDialogBody>
-            <AlertDialogFooter
-              display="flex"
-              flexDirection={{ base: "column-reverse", md: "row" }}
-              justifyContent="space-between"
-              gap={{ base: 4, md: 0 }}
-            >
-              <Button primary onClick={onClose} text="Cancelar" />
-              <Button
-                secondary
-                type="submit"
-                text="Continuar"
-                onClick={() => {
-                  if (onSubmit) return;
-                  onClose();
-                  onContinue();
+          {onSubmit ? (
+            <form onSubmit={onSubmit}>
+              <Content
+                {...{
+                  description,
+                  emphasisDescription,
+                  onClose,
+                  onContinue,
+                  children,
+                  onSubmit,
                 }}
               />
-            </AlertDialogFooter>
-          {/* </form> */}
+            </form>
+          ) : (
+            <Content
+              {...{
+                description,
+                emphasisDescription,
+                onClose,
+                onContinue,
+                children,
+                onSubmit,
+              }}
+            />
+          )}
         </AlertDialogContent>
       </AlertDialog>
     </>

@@ -26,6 +26,9 @@ import { Box, Flex, useDisclosure } from "@chakra-ui/react";
 import ModalAlert from "../../../../../components/Modal/ModalAlert";
 import {
   CANCELADO_ORDER,
+  CANCELADO_RESIDUO,
+  FINALIZADO_RESIDUO,
+  NO_RECOLECTADO_RESIDUO,
   REEMBOLSO_REALIZADO,
   error_order,
   user_role,
@@ -93,11 +96,10 @@ const VentasList = () => {
     );
   };
 
-  const onSubmit = (data) => {
+  const onSubmit = () => {
     const new_state = {
-      venta_id: ventaID,
-      status: CANCELADO_ORDER,
-      motivo_cancelacion: data?.motivo_cancelacion,
+      id: ventaID,
+      status: CANCELADO_RESIDUO,
     };
     dispatch(changeState(new_state));
     onClose2();
@@ -105,10 +107,8 @@ const VentasList = () => {
 
   const onSubmitError = (data) => {
     const new_state = {
-      venta_id: ventaID,
-      status: data?.error?.value,
-      comentario_error: data?.comentario_error,
-      motivo_cancelacion: "",
+      id: ventaID,
+      status: NO_RECOLECTADO_RESIDUO,
     };
 
     dispatch(changeState(new_state));
@@ -117,8 +117,8 @@ const VentasList = () => {
 
   const onSubmitReembolso = () => {
     const new_state = {
-      venta_id: ventaID,
-      status: REEMBOLSO_REALIZADO,
+      id: ventaID,
+      status: FINALIZADO_RESIDUO,
     };
 
     dispatch(changeState(new_state));
@@ -153,62 +153,28 @@ const VentasList = () => {
       />
 
       <ModalAlert
-        subTitleText={"Estas por cancelar la venta"}
-        description={"Al cancelar la venta, ya no podras modificarlo, "}
+        subTitleText={"Estas por cancelar la recolección"}
+        description={"Al cancelar la recolección, ya no podras modificarlo, "}
         emphasisDescription="esta accion no se podrá revertir."
         isOpen={isOpen2}
         onClose={onClose2}
         onContinue={() => {}}
         onSubmit={handleSubmit(onSubmit)}
-      >
-        <Box mt={6}>
-          <InputFormValidation
-            Icon={faQuestion}
-            label="Motivo de la cancelación"
-            placeholder="Escribe el motivo de la cancelación"
-            errors={errors}
-            register={register}
-            key_name="motivo_cancelacion"
-            validation={false}
-          />
-        </Box>
-      </ModalAlert>
+      />
 
       <ModalAlert
-        subTitleText={"Estas por marcar un error"}
-        description={"Al marcar un error, ya no podras modificarlo, "}
+        subTitleText={"Estas por marcar como no recolectado"}
+        description={"Al marcar este estado, ya no podras modificarlo, "}
         emphasisDescription="esta accion no se podrá revertir."
         isOpen={isOpen4}
         onClose={onClose4}
         onContinue={() => {}}
         onSubmit={handleSubmit(onSubmitError)}
-      >
-        <Flex mt={6} gap={4} flexDir="column">
-          <InputSelect
-            options={error_order}
-            placeholder="Seleccionar un error"
-            errors={errors}
-            register={register}
-            control={control}
-            key_name="error"
-            label="Selecciona un error"
-            validation={true}
-          />
-          <InputFormValidation
-            Icon={faQuestion}
-            label="Ingresa algún comentario"
-            placeholder="Escribe aquí el comentario"
-            errors={errors}
-            register={register}
-            key_name="comentario_error"
-            validation={false}
-          />
-        </Flex>
-      </ModalAlert>
+      />
 
       <ModalAlert
-        subTitleText={"Estas por reembolsar la venta"}
-        description={"Al reembolsar la venta, ya no podras modificarlo, "}
+        subTitleText={"Estas por finalizar la recolección"}
+        description={"Al finalizar la recolección, ya no podras modificarlo, "}
         emphasisDescription="esta accion no se podrá revertir."
         isOpen={isOpen5}
         onClose={onClose5}
@@ -219,22 +185,9 @@ const VentasList = () => {
       <OrdenControl isOpen={isOpen3} onClose={onClose3} isView={isView} />
 
       <HeaderViewContent
-        titleView="Ventas"
+        titleView="Recolecciones"
         showCreateButton={false}
-        onKeyPress={(e) =>
-          e.key === "Enter"
-            ? dispatch(
-                getVentas({
-                  filter: filter,
-                  search: search,
-                  isNextPage: false,
-                  isPrevPage: false,
-                })
-              )
-            : null
-        }
-        onChange={(e) => setSearch(e.target.value)}
-        searchTitle="Buscar número de orden"
+        showSearchButton={false}
         onOpenFilers={onOpen}
       />
 

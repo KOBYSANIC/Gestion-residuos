@@ -11,6 +11,9 @@ import { AddButton } from "../../../../components/Buttons/AddButton";
 import InputSelect from "../../../../components/Inputs/InputSelect";
 import TableButton from "../../../../components/Buttons/TableButton/TableButton";
 import toast from "react-hot-toast";
+import TextContent from "../../../../components/Texts/TextContent";
+import { PRECIO_BOLSA, precio_recolecion } from "../../../../Utils/constants";
+import { formatCurrency } from "../../../../Utils/currency";
 
 const DatosCompraForm = ({ errors, register, control }) => {
   const { fields, append, remove } = useFieldArray({
@@ -92,13 +95,13 @@ const DatosCompraForm = ({ errors, register, control }) => {
           />
           <InputFormValidation
             Icon={faFileLines}
-            placeholder="Escribe aquí el peso del residuo"
+            placeholder="Escribe aquí el peso en libras"
             errors={errors?.residuos?.[index]}
             register={register}
             key_name={`residuos.${index}.peso`}
             name_array={"peso"}
             type="number"
-            label="Ingresa el peso del residuo en libras"
+            label="Ingresa el peso aproximado en libras"
             minLength={1}
             noScroll
           />
@@ -119,6 +122,14 @@ const DatosCompraForm = ({ errors, register, control }) => {
         </Grid>
       ))}
       <AddButton content="Agregar nuevo residuo" onClick={() => append()} />
+
+      <TextContent
+        fontSize="2xl"
+        fontWeight="bold"
+        content={`Precio aproxmado de la recolección: ${formatCurrency(
+          fields.length * PRECIO_BOLSA
+        )}`}
+      />
     </>
   );
 };

@@ -3,8 +3,10 @@ export const EN_RUTA = "2";
 export const FINALIZADO = "3";
 export const CANCELADO = "4";
 
+export const PRECIO_BOLSA = 3;
+
 export const ADMINISTRADOR = 1;
-export const VENDEDOR = 2;
+export const TRANSPORTISTA = 2;
 export const CLIENTE = 3;
 
 export const GENERADO = "1";
@@ -13,6 +15,12 @@ export const ENTREGADO = "3";
 
 export const SI_APILCA = "1";
 export const NO_APILCA = "2";
+
+export const GENERADO_RESIDUO = 0;
+export const RECOLECTADO_RESIDUO = 1;
+export const FINALIZADO_RESIDUO = 2;
+export const CANCELADO_RESIDUO = 3;
+export const NO_RECOLECTADO_RESIDUO = 4;
 
 export const GENERADO_ORDER = 0;
 export const PAGO_CONFIRMADO = 1;
@@ -30,16 +38,11 @@ export const ARTICULO_NO_DISPONIBLE = 12;
 
 export const status_order = [
   { value: "", label: "Todos" },
-  { value: COMPLETADO, label: "Completado" },
-  { value: GENERADO_ORDER, label: "Generado" },
-  { value: PAGO_CONFIRMADO, label: "Pago Confirmado" },
-  { value: REEMBOLSO_REALIZADO, label: "Reembolsado" },
-  { value: CANCELADO_ORDER, label: "Cancelado" },
-  { value: COMPRA_FUERA_TIEMPO, label: "Compra fuera de tiempo" },
-  { value: COMPRA_DUPLICADA, label: "Compra duplicada" },
-  { value: PROMOCION_NO_DISPONIBLE, label: "Promoción no disponible" },
-  { value: ERROR_PAGO, label: "Error en el pago" },
-  { value: ARTICULO_NO_DISPONIBLE, label: "Artículo no disponible" },
+  { value: GENERADO_RESIDUO, label: "Generado" },
+  { value: RECOLECTADO_RESIDUO, label: "Recolectado" },
+  { value: FINALIZADO_RESIDUO, label: "Finalizado" },
+  { value: CANCELADO_RESIDUO, label: "Cancelado" },
+  { value: NO_RECOLECTADO_RESIDUO, label: "No recolectado" },
 ];
 
 export const error_order = [
@@ -60,7 +63,7 @@ export const array_error_order = [
 
 export const role_name = {
   [ADMINISTRADOR]: "Administrador",
-  [VENDEDOR]: "Vendedor",
+  [TRANSPORTISTA]: "Transportista",
   [CLIENTE]: "Cliente",
 };
 
@@ -102,13 +105,13 @@ export const document_info = {
 
 export const user_role = [
   { value: 1, label: "Administrador" },
-  { value: 2, label: "Vendedor" },
+  { value: 2, label: "Transportista" },
   { value: 3, label: "Cliente" },
 ];
 
 export const user_role_select = {
   [1]: { value: 1, label: "Administrador" },
-  [2]: { value: 2, label: "Vendedor" },
+  [2]: { value: 2, label: "Transportista" },
   [3]: { value: 3, label: "Cliente" },
 };
 

@@ -2,7 +2,7 @@ import { Navigate } from "react-router-dom";
 
 import { useSelector } from "react-redux";
 import { selectUser } from "../../redux/features/userSlice";
-import { ADMINISTRADOR, CLIENTE, VENDEDOR } from "../../Utils/constants";
+import { ADMINISTRADOR, CLIENTE, TRANSPORTISTA } from "../../Utils/constants";
 
 // Children es una prop que simpre esta, los hijos de este componente
 const PublicRouter = ({ children }) => {
@@ -23,9 +23,9 @@ const PublicRouter = ({ children }) => {
     <Navigate
       to={`/app/${
         user.role === ADMINISTRADOR
-          ? "control_productos"
-          : user.role === VENDEDOR
-          ? "control_pedidos"
+          ? "residuos"
+          : user.role === TRANSPORTISTA
+          ? "recolecciones"
           : user.role === CLIENTE && "residuos"
       }`}
     />

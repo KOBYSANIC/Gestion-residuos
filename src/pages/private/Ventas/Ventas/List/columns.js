@@ -2,33 +2,30 @@ import Badge from "../../../../../components/Badge/Badge";
 import { TableButtonVenta } from "../../../../../components/Buttons/TableButton";
 import { convertStatus } from "../../../../../Utils/functions";
 
-export const columns = (onOpen, onOpen2, onOpen4, onOpen5, setIsView, setVentaID) => [
+export const columns = (
+  onOpen,
+  onOpen2,
+  onOpen4,
+  onOpen5,
+  setIsView,
+  setVentaID
+) => [
   {
-    Header: "No. Orden",
-    accessor: "numero_orden",
+    Header: "Fecha de recolección",
+    accessor: "fecha_recoleccion",
   },
   {
-    Header: "Fecha orden generada",
-    accessor: "created_at",
-    Cell: ({ value }) => {
-      try {
-        const date = value.toDate();
-        const day = date.getDate();
-        const month = date.getMonth() + 1;
-        const year = date.getFullYear();
-
-        const hour = date.getHours();
-        const minutes = date.getMinutes();
-
-        return `${day}/${month}/${year} ${hour}:${minutes}`;
-      } catch (error) {
-        return value;
-      }
-    },
+    Header: "Ubicación",
+    accessor: "ubicacion",
   },
   {
-    Header: "Estado de la orden",
-    accessor: "status",
+    Header: "Comentario",
+    accessor: (value) =>
+      value.comentario ? value.comentario : "Sin comentario",
+  },
+  {
+    Header: "Estado de la recolección",
+    accessor: "estado",
     Cell: ({ value }) => {
       return (
         <Badge
@@ -37,24 +34,6 @@ export const columns = (onOpen, onOpen2, onOpen4, onOpen5, setIsView, setVentaID
         />
       );
     },
-  },
-  {
-    Header: "Usuario",
-    accessor: "usuario.email",
-    Cell: ({ value }) => value || "Usuario no registrado",
-  },
-  {
-    Header: "Método de pago",
-    accessor: (row) => {
-      return `${
-        row.metodo_pago?.metodo_pago?.nombre_banco || "Sin método de pago"
-      } | ${row.metodo_pago?.pais || "Sin país"}`;
-    },
-  },
-  {
-    Header: "Total",
-    accessor: "totales.total",
-    Cell: ({ value }) => `${value || "0.00"} USD`,
   },
   {
     Header: "Acciones",
