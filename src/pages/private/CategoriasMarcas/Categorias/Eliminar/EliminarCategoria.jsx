@@ -20,8 +20,8 @@ const EliminarCategoria = ({ isOpen, onClose }) => {
   };
   return (
     <ModalAlert
-      subTitleText={`Estas por eliminar la categoria ${categoriaSelected?.nombre_categoria}.`}
-      description="Al eliminar la categoria, ya no podras recuperarlo, "
+      subTitleText={`Estas por eliminar la ruta ${categoriaSelected?.nombre_categoria}.`}
+      description="Al eliminar la ruta, ya no podras recuperarlo, "
       emphasisDescription="esta accion no se podrá revertir."
       isOpen={isOpen}
       onClose={onClose}

@@ -36,6 +36,7 @@ const CrearActualizar = ({ isOpen, onClose }) => {
     handleSubmit,
     formState: { errors },
     reset,
+    control,
   } = useForm();
 
   const loading_save = useSelector(loadingActions);
@@ -86,7 +87,11 @@ const CrearActualizar = ({ isOpen, onClose }) => {
             />
           </>
         ) : (
-          <CategoriaForm errors={errors} register={register} />
+          <CategoriaForm
+            errors={errors}
+            register={register}
+            control={control}
+          />
         )}
       </ModalForm>
     </>

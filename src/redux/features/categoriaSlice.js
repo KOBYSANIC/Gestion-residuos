@@ -32,14 +32,7 @@ import { checkDuplicateValue } from "../../Utils/firebaseFunc";
 
 // Funcion para obtener la query global
 const getQuery = (categoriasCollection, search, sort = "asc") => {
-  return query(
-    categoriasCollection,
-    where("active", "==", true),
-    where("buscar_nombre", ">=", search.toLowerCase()),
-    where("buscar_nombre", "<=", search.toLowerCase() + "\uf8ff"),
-    orderBy("buscar_nombre", sort),
-    limit(10)
-  );
+  return query(categoriasCollection, where("active", "==", true), limit(10));
 };
 
 // Funcion para obtener todos los categorias de la base de datos
@@ -52,7 +45,7 @@ export const getCategorias = createAsyncThunk(
     try {
       const categorias = [];
 
-      const categoriasCollection = collection(db, "categorias");
+      const categoriasCollection = collection(db, "rutas");
       const {
         lastVisible,
         firstVisible,
@@ -123,25 +116,7 @@ export const eliminarCategoria = createAsyncThunk(
   "categoria/eliminarCategoria",
   async (categoria_id, { dispatch, rejectWithValue }) => {
     try {
-      const docRef = doc(db, "categorias", categoria_id);
-
-      // verificar si la categoria tiene productos
-      const productos = await getDocs(
-        query(
-          collection(db, "productos"),
-          where("categoria.id", "==", categoria_id),
-          where("active", "==", true)
-        )
-      );
-
-      if (productos.docs.length > 0) {
-        toast.error(
-          "No se puede eliminar la categoria, tiene productos asociados"
-        );
-        return rejectWithValue(
-          "No se puede eliminar la categoria, tiene productos asociados"
-        );
-      }
+      const docRef = doc(db, "rutas", categoria_id);
 
       const updateTimestamp = updateDoc(docRef, {
         active: false,
@@ -150,8 +125,8 @@ export const eliminarCategoria = createAsyncThunk(
 
       await toast.promise(updateTimestamp, {
         loading: "Eliminando...",
-        success: "Categoria eliminada",
-        error: "Error al eliminar la categoria",
+        success: "Ruta eliminada",
+        error: "Error al eliminar la ruta",
       });
 
       dispatch(resetPage());
@@ -169,7 +144,7 @@ export const getCategoria = createAsyncThunk(
   "categoria/getCategoria",
   async (categoria_id, { rejectWithValue }) => {
     try {
-      const docRef = doc(db, "categorias", categoria_id);
+      const docRef = doc(db, "rutas", categoria_id);
       const docSnap = await getDoc(docRef);
 
       if (docSnap.exists()) {
@@ -178,8 +153,8 @@ export const getCategoria = createAsyncThunk(
           id: docSnap.id,
         };
       } else {
-        toast.error("No se encontró la categoria");
-        return rejectWithValue("No se encontró la categoria");
+        toast.error("No se encontró la ruta");
+        return rejectWithValue("No se encontró la ruta");
       }
     } catch (err) {
       return rejectWithValue(err);
@@ -194,33 +169,15 @@ export const createCategoria = createAsyncThunk(
     try {
       const { onClose, reset, ...data } = params;
 
-      const { nombre_categoria } = data;
-      // slug
-      const slug = nombre_categoria.toLowerCase().replace(/ /g, "_");
-      const buscar_nombre = nombre_categoria.toLowerCase();
-
-      const isDuplicate = await checkDuplicateValue(
-        "categorias",
-        "nombre_categoria",
-        nombre_categoria
-      );
-
-      if (isDuplicate) {
-        toast.error("Nombre de la categoria duplicada");
-        return rejectWithValue("Categoria duplicada");
-      }
-
-      const new_categoria = addDoc(collection(db, "categorias"), {
+      const new_categoria = addDoc(collection(db, "rutas"), {
         ...document_info,
         ...data,
-        slug,
-        buscar_nombre,
       });
 
       await toast.promise(new_categoria, {
         loading: "Creando...",
-        success: "Categoria creada",
-        error: "Error al crear la categoria",
+        success: "Ruta creada",
+        error: "Error al crear la Ruta",
       });
 
       dispatch(resetPage());
@@ -244,25 +201,7 @@ export const updateCategoria = createAsyncThunk(
     try {
       const { id, onClose, reset, ...data } = params;
 
-      const { nombre_categoria } = data;
-
-      // slug
-      const slug = nombre_categoria.toLowerCase().replace(/ /g, "_");
-      const buscar_nombre = nombre_categoria.toLowerCase();
-
-      const isDuplicate = await checkDuplicateValue(
-        "categorias",
-        "nombre_categoria",
-        nombre_categoria,
-        id
-      );
-
-      if (isDuplicate) {
-        toast.error("Nombre de la categoria duplicada");
-        return rejectWithValue("Categoria duplicada");
-      }
-
-      const docRef = doc(db, "categorias", id);
+      const docRef = doc(db, "rutas", id);
 
       // transaction atomic
       const transactionFunc = () =>
@@ -270,42 +209,40 @@ export const updateCategoria = createAsyncThunk(
           const doc = await transaction.get(docRef);
 
           if (!doc.exists()) {
-            toast.error("La categoria no existe");
-            throw "La categoria no existe";
+            toast.error("La ruta no existe");
+            throw "La ruta no existe";
           }
 
           transaction.update(docRef, {
             ...data,
-            slug,
-            buscar_nombre,
             updated_at: new Date(),
           });
 
           // update categoria en productos
-          const productos = await getDocs(
-            query(
-              collection(db, "productos"),
-              where("categoria.id", "==", id),
-              where("active", "==", true)
-            )
-          );
+          // const productos = await getDocs(
+          //   query(
+          //     collection(db, "productos"),
+          //     where("categoria.id", "==", id),
+          //     where("active", "==", true)
+          //   )
+          // );
 
-          productos.forEach((doc) => {
-            // Obtener el ID del documento
-            const docRef = doc.ref;
+          // productos.forEach((doc) => {
+          //   // Obtener el ID del documento
+          //   const docRef = doc.ref;
 
-            // Actualizar el documento con los nuevos datos
-            transaction.update(docRef, {
-              "categoria.nombre_categoria": nombre_categoria,
-              "categoria.slug": slug,
-            });
-          });
+          //   // Actualizar el documento con los nuevos datos
+          //   transaction.update(docRef, {
+          //     "categoria.nombre_categoria": nombre_categoria,
+          //     "categoria.slug": slug,
+          //   });
+          // });
         });
 
       await toast.promise(transactionFunc(), {
         loading: "Actualizando...",
-        success: "Categoria actualizada",
-        error: "Error al actualizar la Categoria",
+        success: "Ruta actualizada",
+        error: "Error al actualizar la Ruta",
       });
 
       onClose();

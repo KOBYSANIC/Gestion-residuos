@@ -32,12 +32,12 @@ const TableButtonCategoria = ({
 
   const items = [
     {
-      name: "Editar categoria",
+      name: "Editar ruta",
       onClick: handleUpdate,
       hidden: false,
     },
     {
-      name: "Eliminar categoria",
+      name: "Eliminar ruta",
       onClick: handleOnClick,
       hidden: false,
     },

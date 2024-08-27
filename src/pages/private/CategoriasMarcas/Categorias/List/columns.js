@@ -3,11 +3,11 @@ import { TableButtonCategoria } from "../../../../../components/Buttons/TableBut
 export const columns = (onOpenEliminar, onOpenCreateUpdate) => [
   {
     Header: "Nombre",
-    accessor: "nombre_categoria",
+    accessor: "nombre_ruta",
   },
   {
     Header: "Descripción",
-    accessor: "descripcion_categoria",
+    accessor: "descripcion_ruta",
   },
   {
     Header: "Acciones",
