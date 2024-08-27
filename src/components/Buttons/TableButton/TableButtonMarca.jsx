@@ -27,12 +27,12 @@ const TableButtonMarca = ({ values, onOpenEliminar, onOpenCreateUpdate }) => {
   };
   const items = [
     {
-      name: "Editar marca",
+      name: "Editar vehículo",
       onClick: handleUpdate,
       hidden: false,
     },
     {
-      name: "Eliminar marca",
+      name: "Cambiar estado",
       onClick: handleOnClick,
       hidden: false,
     },

@@ -34,10 +34,8 @@ import { checkDuplicateValue } from "../../Utils/firebaseFunc";
 const getQuery = (marcasCollection, search, sort = "asc") => {
   return query(
     marcasCollection,
-    where("active", "==", true),
-    where("buscar_nombre", ">=", search.toLowerCase()),
-    where("buscar_nombre", "<=", search.toLowerCase() + "\uf8ff"),
-    orderBy("buscar_nombre", sort),
+    // where("active", "==", true),
+    orderBy("placa", sort),
     limit(10)
   );
 };
@@ -52,7 +50,7 @@ export const getMarcas = createAsyncThunk(
     try {
       const marcas = [];
 
-      const marcasCollection = collection(db, "marcas");
+      const marcasCollection = collection(db, "vehiculos");
       const { lastVisible, firstVisible, marcas: _marcas } = getState().marca;
 
       let querySnapshot = null;
@@ -117,35 +115,19 @@ export const getMarcas = createAsyncThunk(
 // funcion para eliminar una marca
 export const eliminarMarca = createAsyncThunk(
   "marca/eliminarMarca",
-  async (marca_id, { dispatch, rejectWithValue }) => {
+  async (params, { dispatch, rejectWithValue }) => {
     try {
-      const docRef = doc(db, "marcas", marca_id);
-
-      // validar si la marca tiene productos asociados
-      const productos = await getDocs(
-        query(
-          collection(db, "productos"),
-          where("marca.id", "==", marca_id),
-          where("active", "==", true)
-        )
-      );
-
-      if (productos.docs.length > 0) {
-        toast.error("No se puede eliminar la marca, tiene productos asociados");
-        return rejectWithValue(
-          "No se puede eliminar la marca, tiene productos asociados"
-        );
-      }
+      const docRef = doc(db, "vehiculos", params?.id);
 
       const updateTimestamp = updateDoc(docRef, {
-        active: false,
+        active: !params?.stauts,
         updated_at: new Date(),
       });
 
       await toast.promise(updateTimestamp, {
         loading: "Eliminando...",
-        success: "Marca eliminada",
-        error: "Error al eliminar la marca",
+        success: "Estado del vehículo actualizado",
+        error: "Error al actualizar el estado del vehículo",
       });
 
       dispatch(resetPage());
@@ -163,7 +145,7 @@ export const getMarca = createAsyncThunk(
   "marca/getMarca",
   async (marca_id, { rejectWithValue }) => {
     try {
-      const docRef = doc(db, "marcas", marca_id);
+      const docRef = doc(db, "vehiculos", marca_id);
       const docSnap = await getDoc(docRef);
 
       if (docSnap.exists()) {
@@ -172,8 +154,8 @@ export const getMarca = createAsyncThunk(
           id: docSnap.id,
         };
       } else {
-        toast.error("No se encontró la marca");
-        return rejectWithValue("No se encontró la marca");
+        toast.error("No se encontró el vehículo");
+        return rejectWithValue("No se encontró el vehículo");
       }
     } catch (err) {
       return rejectWithValue(err);
@@ -188,34 +170,15 @@ export const createMarca = createAsyncThunk(
     try {
       const { onClose, reset, ...data } = params;
 
-      const { nombre_marca } = data;
-
-      // slug
-      const slug = nombre_marca.toLowerCase().replace(/ /g, "_");
-      const buscar_nombre = nombre_marca.toLowerCase();
-
-      const isDuplicate = await checkDuplicateValue(
-        "marcas",
-        "nombre_marca",
-        nombre_marca
-      );
-
-      if (isDuplicate) {
-        toast.error("Nombre de la marca duplicada");
-        return rejectWithValue("Marca duplicada");
-      }
-
-      const new_marca = addDoc(collection(db, "marcas"), {
+      const new_marca = addDoc(collection(db, "vehiculos"), {
         ...document_info,
         ...data,
-        slug,
-        buscar_nombre,
       });
 
       await toast.promise(new_marca, {
         loading: "Creando...",
-        success: "Marca creada",
-        error: "Error al crear la Marca",
+        success: "Vehículo creado",
+        error: "Error al crear el vehículo",
       });
 
       dispatch(resetPage());
@@ -239,25 +202,7 @@ export const updateMarca = createAsyncThunk(
     try {
       const { id, onClose, reset, ...data } = params;
 
-      const { nombre_marca } = data;
-
-      // slug
-      const slug = nombre_marca.toLowerCase().replace(/ /g, "_");
-      const buscar_nombre = nombre_marca.toLowerCase();
-
-      const isDuplicate = await checkDuplicateValue(
-        "marcas",
-        "nombre_marca",
-        nombre_marca,
-        id
-      );
-
-      if (isDuplicate) {
-        toast.error("Nombre de la marca duplicada");
-        return rejectWithValue("Marca duplicada");
-      }
-
-      const docRef = doc(db, "marcas", id);
+      const docRef = doc(db, "vehiculos", id);
 
       // transaction atomic
       const transactionFunc = () =>
@@ -265,42 +210,40 @@ export const updateMarca = createAsyncThunk(
           const doc = await transaction.get(docRef);
 
           if (!doc.exists()) {
-            toast.error("La marca no existe");
-            throw "La marca no existe";
+            toast.error("El vehículo no existe");
+            throw "El vehículo no existe";
           }
 
           transaction.update(docRef, {
             ...data,
-            slug,
-            buscar_nombre,
             updated_at: new Date(),
           });
 
           // update marca en productos
-          const productos = await getDocs(
-            query(
-              collection(db, "productos"),
-              where("marca.id", "==", id),
-              where("active", "==", true)
-            )
-          );
+          // const productos = await getDocs(
+          //   query(
+          //     collection(db, "productos"),
+          //     where("marca.id", "==", id),
+          //     where("active", "==", true)
+          //   )
+          // );
 
-          productos.forEach((doc) => {
-            // Obtener el ID del documento
-            const docRefProducto = doc.ref;
+          // productos.forEach((doc) => {
+          //   // Obtener el ID del documento
+          //   const docRefProducto = doc.ref;
 
-            // Actualizar el documento con los nuevos datos
-            transaction.update(docRefProducto, {
-              "marca.nombre_marca": nombre_marca,
-              "marca.slug": slug,
-            });
-          });
+          //   // Actualizar el documento con los nuevos datos
+          //   transaction.update(docRefProducto, {
+          //     "marca.nombre_marca": nombre_marca,
+          //     "marca.slug": slug,
+          //   });
+          // });
         });
 
       await toast.promise(transactionFunc(), {
         loading: "Actualizando...",
-        success: "Marca actualizada",
-        error: "Error al actualizar la Marca",
+        success: "Vehículo actualizado",
+        error: "Error al actualizar el vehículo",
       });
 
       onClose();

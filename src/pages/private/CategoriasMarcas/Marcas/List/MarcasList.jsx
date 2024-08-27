@@ -84,23 +84,11 @@ const MarcasList = () => {
       <EliminarMarca isOpen={isOpenEliminar} onClose={onCloseEliminar} />
 
       <HeaderViewContent
-        titleView="Marcas"
-        textButton="Nueva marca"
+        titleView="Vehículos"
+        textButton="Nueva vehículo"
         showFilterButton={false}
         onOpen={onOpenCreate}
-        onKeyPress={(e) =>
-          e.key === "Enter"
-            ? dispatch(
-                getMarcas({
-                  search: search,
-                  isNextPage: false,
-                  isPrevPage: false,
-                })
-              )
-            : null
-        }
-        onChange={(e) => setSearch(e.target.value)}
-        searchTitle="Buscar por nombre"
+        showSearchButton={false}
       />
       <Table
         columns={columnsRender}
