@@ -1,13 +1,24 @@
+import Badge from "../../../../../components/Badge/Badge";
 import { TableButtonMarca } from "../../../../../components/Buttons/TableButton";
 
 export const columns = (onOpenEliminar, onOpenCreateUpdate) => [
   {
-    Header: "Nombre",
-    accessor: "nombre_marca",
+    Header: "Placa",
+    accessor: "placa",
   },
   {
-    Header: "Descripción",
-    accessor: "descripcion_marca",
+    Header: "Tipo",
+    accessor: "tipo.value",
+  },
+  {
+    Header: "Estado",
+    accessor: "active",
+    Cell: ({ value }) => (
+      <Badge
+        textContent={value ? "Activo" : "Inactivo"}
+        colorScheme={value ? "blue" : "red"}
+      />
+    ),
   },
   {
     Header: "Acciones",

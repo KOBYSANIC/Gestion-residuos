@@ -16,7 +16,9 @@ const EliminarMarca = ({ isOpen, onClose }) => {
   const marcaSelected = useSelector(selectMarcaSelected);
 
   const handleOnContinue = () => {
-    dispatch(eliminarMarca(marcaSelected.id));
+    dispatch(
+      eliminarMarca({ id: marcaSelected?.id, stauts: marcaSelected?.active })
+    );
   };
   return (
     <ModalAlert

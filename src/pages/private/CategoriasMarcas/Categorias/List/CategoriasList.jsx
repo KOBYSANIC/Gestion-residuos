@@ -84,23 +84,11 @@ const CategoriasList = () => {
       <EliminarCategoria isOpen={isOpenEliminar} onClose={onCloseEliminar} />
 
       <HeaderViewContent
-        titleView="Categorias"
-        textButton="Nueva categoria"
+        titleView="Rutas"
+        textButton="Nueva ruta"
         showFilterButton={false}
         onOpen={onOpenCreate}
-        onKeyPress={(e) =>
-          e.key === "Enter"
-            ? dispatch(
-                getCategorias({
-                  search: search,
-                  isNextPage: false,
-                  isPrevPage: false,
-                })
-              )
-            : null
-        }
-        onChange={(e) => setSearch(e.target.value)}
-        searchTitle="Buscar por nombre"
+        showSearchButton={false}
       />
 
       <Table

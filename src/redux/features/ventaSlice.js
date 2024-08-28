@@ -21,8 +21,6 @@ import {
 
 // toast
 import toast from "react-hot-toast";
-
-import moment from "moment";
 // -----------------------------------------Funciones-----------------------------------------
 
 // Funcion para obtener la query global
@@ -201,116 +199,6 @@ export const getOrder = createAsyncThunk(
     }
   }
 );
-
-const updateTransaction = async (
-  venta_id,
-  status,
-  motivo_cancelacion,
-  comentario_error
-) => {
-  const transactionFunc = () =>
-    runTransaction(db, async (transaction) => {
-      const docRef = doc(db, "ventas", venta_id);
-      const docSnap = await transaction.get(docRef);
-
-      if (!docSnap.exists()) {
-        toast.error("No se encontró la orden");
-        throw new Error("No se encontró la orden");
-      }
-
-      const bitacora = docSnap.data().bitacora || [];
-      const orden = docSnap.data().orden;
-
-      const productos = {};
-
-      if (orden) {
-        // Lee todos los productos primero y almacena los resultados
-        for (const item of orden) {
-          const productoRef = doc(db, "productos", item?.productoID);
-          const productoSnap = await transaction.get(productoRef);
-          productos[item?.productoID] = {
-            snap: productoSnap,
-            quantity: item?.items?.reduce(
-              (acc, curr) => acc + curr?.quantity,
-              0
-            ),
-          };
-        }
-
-        // Realiza todas las escrituras después
-        transaction.update(docRef, {
-          status,
-          comentario_error:
-            comentario_error || docSnap.data()?.comentario_error || "",
-          motivo_cancelacion:
-            motivo_cancelacion || docSnap.data()?.motivo_cancelacion || "",
-          bitacora: [
-            ...bitacora,
-            {
-              status,
-              created_at: moment().format("YYYY-MM-DD HH:mm:ss"),
-              comentario_error:
-                comentario_error || docSnap.data()?.comentario_error || "",
-              motivo_cancelacion:
-                motivo_cancelacion || docSnap.data()?.motivo_cancelacion || "",
-            },
-          ],
-        });
-
-        orden.map((item) => {
-          const productoSnap = productos[item?.productoID]?.snap;
-          const productoRef = doc(db, "productos", item?.productoID);
-
-          transaction.update(productoRef, {
-            cantidad_vendidos:
-              (productoSnap.data().cantidad_vendidos || 0) +
-              productos[item?.productoID]?.quantity,
-          });
-        });
-      }
-    });
-
-  await toast.promise(transactionFunc(), {
-    loading: "Actualizando...",
-    success: "Estado de la orden actualizado",
-    error: "Error al editar la orden",
-  });
-};
-
-const updateNormal = async (
-  docRef,
-  docSnap,
-  status,
-  motivo_cancelacion,
-  comentario_error
-) => {
-  const bitacora = docSnap.data().bitacora || [];
-
-  const updateTimestamp = updateDoc(docRef, {
-    status,
-    comentario_error:
-      comentario_error || docSnap.data()?.comentario_error || "",
-    motivo_cancelacion:
-      motivo_cancelacion || docSnap.data()?.motivo_cancelacion || "",
-    bitacora: [
-      ...bitacora,
-      {
-        status,
-        created_at: moment().format("YYYY-MM-DD HH:mm:ss"),
-        comentario_error:
-          comentario_error || docSnap.data()?.comentario_error || "",
-        motivo_cancelacion:
-          motivo_cancelacion || docSnap.data()?.motivo_cancelacion || "",
-      },
-    ],
-  });
-
-  await toast.promise(updateTimestamp, {
-    loading: "Actualizando...",
-    success: "Estado de la orden actualizado",
-    error: "Error al editar la orden",
-  });
-};
 
 export const changeState = createAsyncThunk(
   "venta/changeState",

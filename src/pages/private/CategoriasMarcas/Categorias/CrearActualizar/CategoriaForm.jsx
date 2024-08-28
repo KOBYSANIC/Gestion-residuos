@@ -5,26 +5,40 @@ import { faFileLines } from "@fortawesome/free-solid-svg-icons";
 
 // components
 import InputFormValidation from "../../../../../components/Inputs/InputFormValidation/InputFormValidation";
+import InputAsyncSelect from "../../../../../components/Inputs/InputSelect/InputAsyncSelect";
 
-const CategoriaForm = ({ errors, register }) => {
+const CategoriaForm = ({ errors, register, control }) => {
   return (
     <>
       <InputFormValidation
         Icon={faFileLines}
-        placeholder="Ej: Juegos Moviles, Juegos de PC"
+        placeholder="Escribe aquí el nombre de la ruta"
         errors={errors}
         register={register}
-        key_name="nombre_categoria"
-        label="Escribe el nombre de la categoría"
+        key_name="nombre_ruta"
+        label="Ingresa el nombre de la ruta"
       />
 
       <InputFormValidation
         Icon={faFileLines}
-        placeholder="Ingresa la descripción de la categoría"
+        placeholder="Escibe aquí la descripción"
         errors={errors}
         register={register}
-        key_name="descripcion_categoria"
-        label="Escribe la descripción de la categoría"
+        key_name="descripcion_ruta"
+        label="Escribe la descripción"
+      />
+
+      <InputAsyncSelect
+        placeholder="Selecciona una opción"
+        errors={errors}
+        control={control}
+        key_name="vehiculo_id"
+        label="Selecciona la categoria del producto"
+        validation
+        valueKey="id"
+        labelKey="placa"
+        collection_name="vehiculos"
+        search_field_name="placa"
       />
     </>
   );

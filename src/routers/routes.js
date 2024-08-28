@@ -47,21 +47,23 @@ export const routes = [
   },
   {
     name: "Rutas",
-    icon: faMoneyBillTransfer,
-    path: "/conf_financiera",
-    component: MonedasList,
+    icon: faTags,
+    path: "/rutas",
     isPrivate: true,
     showSidebar: true,
     accessValidate: [ADMINISTRADOR],
-  },
-  {
-    name: "Vehículos",
-    icon: faCartShopping,
-    path: "/ventas",
-    component: VentasList,
-    isPrivate: true,
-    showSidebar: true,
-    accessValidate: [ADMINISTRADOR, TRANSPORTISTA],
+    subMenu: [
+      {
+        name: "Rutas",
+        path: "/rutas/rutas",
+        component: CategoriasList,
+      },
+      {
+        name: "Vehículos",
+        path: "/rutas/vehiculos",
+        component: MarcasList,
+      },
+    ],
   },
 
   {

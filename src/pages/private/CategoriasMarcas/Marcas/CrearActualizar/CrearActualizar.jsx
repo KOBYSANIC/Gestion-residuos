@@ -28,14 +28,15 @@ const CrearActualizar = ({ isOpen, onClose }) => {
   const marcaSelected = useSelector(selectMarcaDataUpdate);
   const loading = useSelector(loadingActions);
   const isUpdate = useSelector(selectIsUpdate);
-  const modalTitle = isUpdate ? "Editar Marca" : "Nueva Marca";
-  const buttonTitle = isUpdate ? "Actualizar Marca" : "Agregar Marca";
+  const modalTitle = isUpdate ? "Editar Vehículo" : "Nueva Vehículo";
+  const buttonTitle = isUpdate ? "Actualizar Vehículo" : "Agregar Vehículo";
 
   const {
     register,
     handleSubmit,
     formState: { errors },
     reset,
+    control,
   } = useForm();
 
   const loading_save = useSelector(loadingActions);
@@ -86,7 +87,7 @@ const CrearActualizar = ({ isOpen, onClose }) => {
             />
           </>
         ) : (
-          <MarcaForm errors={errors} register={register} />
+          <MarcaForm errors={errors} register={register} control={control} />
         )}
       </ModalForm>
     </>
