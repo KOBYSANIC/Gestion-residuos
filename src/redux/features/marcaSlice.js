@@ -219,25 +219,46 @@ export const updateMarca = createAsyncThunk(
             updated_at: new Date(),
           });
 
+          // update
+          const rutas = await getDocs(
+            query(
+              collection(db, "rutas"),
+              where("vehiculo_id.id", "==", id),
+              where("active", "==", true)
+            )
+          );
+
+          rutas.forEach((doc) => {
+            // Obtener el ID del documento
+            const docRefProducto = doc.ref;
+
+            // Actualizar el documento con los nuevos datos
+            transaction.update(docRefProducto, {
+              vehiculo_id: { ...data },
+            });
+          });
+
           // update marca en productos
-          // const productos = await getDocs(
-          //   query(
-          //     collection(db, "productos"),
-          //     where("marca.id", "==", id),
-          //     where("active", "==", true)
-          //   )
-          // );
+          const recolecciones = await getDocs(
+            query(
+              collection(db, "residuos"),
+              where("ruta.vehiculo_id.id", "==", id),
+              where("active", "==", true)
+            )
+          );
 
-          // productos.forEach((doc) => {
-          //   // Obtener el ID del documento
-          //   const docRefProducto = doc.ref;
+          recolecciones.forEach((doc) => {
+            // Obtener el ID del documento
+            const docRefProducto = doc.ref;
 
-          //   // Actualizar el documento con los nuevos datos
-          //   transaction.update(docRefProducto, {
-          //     "marca.nombre_marca": nombre_marca,
-          //     "marca.slug": slug,
-          //   });
-          // });
+            // Actualizar el documento con los nuevos datos
+            transaction.update(docRefProducto, {
+              ruta: {
+                ...doc.data().ruta,
+                vehiculo_id: { ...data },
+              },
+            });
+          });
         });
 
       await toast.promise(transactionFunc(), {

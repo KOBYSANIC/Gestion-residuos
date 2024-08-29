@@ -219,24 +219,23 @@ export const updateCategoria = createAsyncThunk(
           });
 
           // update categoria en productos
-          // const productos = await getDocs(
-          //   query(
-          //     collection(db, "productos"),
-          //     where("categoria.id", "==", id),
-          //     where("active", "==", true)
-          //   )
-          // );
+          const productos = await getDocs(
+            query(
+              collection(db, "residuos"),
+              where("ruta.id", "==", id),
+              where("active", "==", true)
+            )
+          );
 
-          // productos.forEach((doc) => {
-          //   // Obtener el ID del documento
-          //   const docRef = doc.ref;
+          productos.forEach((doc) => {
+            // Obtener el ID del documento
+            const docRef = doc.ref;
 
-          //   // Actualizar el documento con los nuevos datos
-          //   transaction.update(docRef, {
-          //     "categoria.nombre_categoria": nombre_categoria,
-          //     "categoria.slug": slug,
-          //   });
-          // });
+            // Actualizar el documento con los nuevos datos
+            transaction.update(docRef, {
+              ruta: { ...data },
+            });
+          });
         });
 
       await toast.promise(transactionFunc(), {
