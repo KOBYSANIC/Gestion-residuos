@@ -209,6 +209,7 @@ export const changeState = createAsyncThunk(
       monto_cobrado = 0,
       comentario_reciclador = "",
       fecha_recoleccion_reciclador = "",
+      ruta = "",
     },
     { dispatch, rejectWithValue }
   ) => {
@@ -220,6 +221,7 @@ export const changeState = createAsyncThunk(
         comentario_reciclador,
         monto_cobrado,
         fecha_recoleccion_reciclador,
+        ruta,
       });
 
       await toast.promise(pregunta, {

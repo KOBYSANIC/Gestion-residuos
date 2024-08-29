@@ -1,12 +1,13 @@
 import { Grid, Skeleton } from "@chakra-ui/react";
 import React, { useEffect } from "react";
 import InputFormValidation from "../../../../../../../components/Inputs/InputFormValidation/InputFormValidation";
+import InputAsyncSelect from "../../../../../../../components/Inputs/InputSelect/InputAsyncSelect";
 import {
   faCalendarAlt,
   faFileLines,
   faMapLocationDot,
 } from "@fortawesome/free-solid-svg-icons";
-import { useFieldArray, useForm } from "react-hook-form";
+import { useFieldArray } from "react-hook-form";
 import InputSelect from "../../../../../../../components/Inputs/InputSelect";
 import TextContent from "../../../../../../../components/Texts/TextContent";
 import { PRECIO_BOLSA } from "../../../../../../../Utils/constants";
@@ -20,15 +21,24 @@ const DetalleVenta = ({
   control,
   errors,
   isView,
+  getValues,
+  setValue,
 }) => {
   const { fields } = useFieldArray({
     control,
     name: "residuos",
   });
 
+  const [change, setChange] = React.useState(false);
+
   useEffect(() => {
     reset(orderSelected);
   }, [orderSelected]);
+
+  useEffect(() => {
+    !isView &&
+      setValue("vehiculo_asignado", getValues("ruta")?.vehiculo_id?.placa);
+  }, [change, orderSelected]);
   return (
     <Skeleton
       isLoaded={!loading}
@@ -110,6 +120,33 @@ const DetalleVenta = ({
             key_name="comentario"
             label="Comentario del cliente"
             required={false}
+            disabled
+          />
+
+          <InputAsyncSelect
+            placeholder="Selecciona una opción"
+            errors={errors}
+            control={control}
+            key_name="ruta"
+            label="Selecciona la ruta de recolección"
+            validation
+            valueKey="id"
+            labelKey="nombre_ruta"
+            collection_name="rutas"
+            search_field_name="nombre_ruta"
+            setChange={setChange}
+            disabled={isView}
+          />
+
+          <InputFormValidation
+            Icon={faMapLocationDot}
+            placeholder="Vehículo asignado"
+            errors={errors}
+            register={register}
+            key_name="vehiculo_asignado"
+            label="Vehículo asignado"
+            required={false}
+            defaultValue={orderSelected?.ruta?.vehiculo_id?.placa}
             disabled
           />
         </Grid>

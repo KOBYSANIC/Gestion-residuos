@@ -18,6 +18,8 @@ const OrdenControl = ({ isOpen, onClose, isView }) => {
     control,
     formState: { errors },
     reset,
+    getValues,
+    setValue,
   } = useForm();
 
   const dispatch = useDispatch();
@@ -36,6 +38,7 @@ const OrdenControl = ({ isOpen, onClose, isView }) => {
         monto_cobrado: data.monto_cobrado || 0,
         comentario_reciclador: data.comentario_reciclador || "",
         fecha_recoleccion_reciclador: data.fecha_recoleccion_reciclador || "",
+        ruta: data.ruta,
       })
     );
     onClose();
@@ -53,6 +56,8 @@ const OrdenControl = ({ isOpen, onClose, isView }) => {
       reset={reset}
       key={"form-detalle-venta"}
       isView={isView}
+      getValues={getValues}
+      setValue={setValue}
     />,
   ];
 
@@ -65,19 +70,6 @@ const OrdenControl = ({ isOpen, onClose, isView }) => {
   return (
     <ModalFormMultiStep
       titleModal={"Recolección de residuos"}
-      // information={
-      //   orderSelected?.comentario_error ||
-      //   orderSelected?.motivo_cancelacion ||
-      //   ""
-      // }
-      // boldInformation={
-      //   orderSelected?.comentario_error
-      //     ? "Motivo de error:"
-      //     : orderSelected?.motivo_cancelacion
-      //     ? "Motivo de cancelación:"
-      //     : ""
-      // }
-      // informationColor="brand.warning"
       isOpen={isOpen}
       onClose={onClose}
       handleSubmit={handleSubmit}

@@ -8,6 +8,7 @@ import {
   setIsUpdate,
   setProductoSelected,
 } from "../../../redux/features/productoSlice";
+import { GENERADO_RESIDUO } from "../../../Utils/constants";
 
 const TableButtonProducts = ({
   values,
@@ -32,7 +33,7 @@ const TableButtonProducts = ({
     {
       name: "Editar residuo",
       onClick: handleUpdate,
-      hidden: false,
+      hidden: values.estado !== GENERADO_RESIDUO,
     },
     {
       name: "Eliminar residuo",

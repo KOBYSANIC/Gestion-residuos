@@ -23,6 +23,7 @@ const InputAsyncSelect = ({
   labelKey = "label",
   labelKey2 = "",
   valueKey = "value",
+  setChange,
   collection_name = "",
   search_field_name = "",
   name_array,
@@ -69,6 +70,7 @@ const InputAsyncSelect = ({
               } else {
                 onChange(null);
               }
+              setChange && setChange(e);
             }}
             loadOptions={asyncOptions}
             theme={customTheme}
