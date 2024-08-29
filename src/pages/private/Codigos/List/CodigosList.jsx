@@ -1,10 +1,5 @@
-import React, { useEffect, useState } from "react";
-
-// components
-import HeaderViewContent from "../../../../components/HeaderViewContent";
+import React, { useEffect } from "react";
 import Table from "../../../../components/Table";
-import EliminarCodigo from "../Eliminar/EliminarCodigo";
-import CrearActualizar from "../CrearActualizar";
 
 // hooks
 import useColumns from "../../../../hooks/useColumns";
@@ -14,97 +9,53 @@ import { columns } from "./columns";
 
 // redux
 import {
-  getCodigos,
+  getVentas,
   nextPage,
   prevPage,
-  selectLoadingCodigos,
+  selectLoadingVentas,
   selectPage,
-  selectCodigos,
-  setIsUpdate,
-} from "../../../../redux/features/codigoSlice";
+  selectVentas,
+} from "../../../../redux/features/ventaSlice";
 import { useDispatch, useSelector } from "react-redux";
+import HeaderViewContent from "../../../../components/HeaderViewContent";
 
-// chakra
-import { useDisclosure } from "@chakra-ui/react";
-
-const CodigosList = () => {
-  const [search, setSearch] = useState("");
+const ReportesList = () => {
   const dispatch = useDispatch();
 
-  // modal eliminar
-  const {
-    isOpen: isOpenEliminar,
-    onOpen: onOpenEliminar,
-    onClose: onCloseEliminar,
-  } = useDisclosure();
-
-  // modal create update codigo
-  const {
-    isOpen: isOpenCreateUpdate,
-    onOpen: onOpenCreateUpdate,
-    onClose: onCloseCreateUpdate,
-  } = useDisclosure();
-
   // columnas de la tabla
-  const columnsRender = useColumns(columns(onOpenEliminar, onOpenCreateUpdate));
+  const columnsRender = useColumns(columns());
 
   // selectores de redux
-  const loading = useSelector(selectLoadingCodigos);
-  const codigosData = useSelector(selectCodigos);
+  const loading = useSelector(selectLoadingVentas);
+  const ventasData = useSelector(selectVentas);
   const page = useSelector(selectPage);
 
   const nextPageTable = () => {
     dispatch(nextPage());
-    dispatch(getCodigos({ isNextPage: true, isPrevPage: false }));
+    dispatch(getVentas({ isNextPage: true, isPrevPage: false }));
   };
 
   const prevPageTable = () => {
     dispatch(prevPage());
-    dispatch(getCodigos({ isNextPage: false, isPrevPage: true }));
-  };
-
-  const onOpenCreate = () => {
-    dispatch(setIsUpdate(false));
-    onOpenCreateUpdate();
+    dispatch(getVentas({ isNextPage: false, isPrevPage: true }));
   };
 
   useEffect(() => {
-    dispatch(getCodigos({ isNextPage: false, isPrevPage: false }));
+    dispatch(getVentas({ isNextPage: false, isPrevPage: false }));
   }, [dispatch]);
 
   return (
     <>
-      {/* modal create update codigo */}
-      <CrearActualizar
-        isOpen={isOpenCreateUpdate}
-        onClose={onCloseCreateUpdate}
-      />
-
-      {/* modal eliminar */}
-      <EliminarCodigo isOpen={isOpenEliminar} onClose={onCloseEliminar} />
-
       <HeaderViewContent
-        titleView="Códigos"
-        textButton="Nuevo código"
+        titleView="Reporte de recolecciones"
+        showCreateButton={false}
+        showSearchButton={false}
         showFilterButton={false}
-        onOpen={onOpenCreate}
-        onKeyPress={(e) =>
-          e.key === "Enter"
-            ? dispatch(
-                getCodigos({
-                  search: search,
-                  isNextPage: false,
-                  isPrevPage: false,
-                })
-              )
-            : null
-        }
-        onChange={(e) => setSearch(e.target.value)}
       />
 
       <Table
         columns={columnsRender}
-        data={codigosData}
+        data={ventasData}
         loading={loading}
         page={page}
         prevPageTable={prevPageTable}
@@ -115,4 +66,4 @@ const CodigosList = () => {
   );
 };
 
-export default CodigosList;
+export default ReportesList;

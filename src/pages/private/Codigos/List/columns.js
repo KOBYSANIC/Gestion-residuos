@@ -1,23 +1,30 @@
-import { TableButtonCodigo } from "../../../../components/Buttons/TableButton";
+import Badge from "../../../../components/Badge/Badge";
+import { convertStatus } from "../../../../Utils/functions";
 
-export const columns = (onOpenEliminar, onOpenCreateUpdate) => [
+export const columns = () => [
   {
-    Header: "Nombre",
-    accessor: "nombre_codigo",
+    Header: "Fecha de recolección",
+    accessor: "fecha_recoleccion",
   },
   {
-    Header: "Marca",
-    accessor: "marca.nombre_marca",
+    Header: "Ubicación",
+    accessor: "ubicacion",
   },
   {
-    Header: "Acciones",
-    accessor: "id",
-    Cell: ({ row: { values } }) => (
-      <TableButtonCodigo
-        values={values}
-        onOpenEliminar={onOpenEliminar}
-        onOpenCreateUpdate={onOpenCreateUpdate}
-      />
-    ),
+    Header: "Comentario",
+    accessor: (value) =>
+      value.comentario ? value.comentario : "Sin comentario",
+  },
+  {
+    Header: "Estado de la recolección",
+    accessor: "estado",
+    Cell: ({ value }) => {
+      return (
+        <Badge
+          textContent={convertStatus(value)?.name}
+          colorScheme={convertStatus(value)?.color}
+        />
+      );
+    },
   },
 ];
