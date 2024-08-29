@@ -39,6 +39,37 @@ const getQuery = (carruselsCollection, search, sort = "asc") => {
   );
 };
 
+export const getAllCarrusels = createAsyncThunk(
+  "carrusel/getAllCarrusels",
+  async (
+    { isNextPage, isPrevPage, search = "" },
+    { rejectWithValue, getState, dispatch }
+  ) => {
+    try {
+      const carrusels = [];
+
+      const carruselsCollection = collection(db, "carrusels");
+
+      const q = query(
+        carruselsCollection,
+        where("active", "==", true),
+        orderBy("nombre_carrusel", "asc")
+      );
+
+      const querySnapshot = await getDocs(q);
+
+      querySnapshot.forEach((doc) => {
+        carrusels.push({ ...doc.data(), id: doc.id });
+      });
+      return carrusels;
+    } catch (err) {
+      console.log(err);
+      toast.error(err.message);
+      return rejectWithValue(err);
+    }
+  }
+);
+
 // Funcion para obtener todos los carrusels de la base de datos
 export const getCarrusels = createAsyncThunk(
   "carrusel/getCarrusels",
@@ -207,14 +238,14 @@ export const updateCarrusel = createAsyncThunk(
   async (params, { dispatch, rejectWithValue }) => {
     try {
       const { id, onClose, reset, ...data } = params;
-      const {imagen_carrusel} = data;
+      const { imagen_carrusel } = data;
 
       const images_url = await validateImage(
         id,
         imagen_carrusel,
         "imagen_carrusel",
         "carrusels"
-      )
+      );
       const carrusel = updateDoc(doc(db, "carrusels", id), {
         ...data,
         updated_at: new Date(),
@@ -245,6 +276,7 @@ export const carruselSlice = createSlice({
   name: "carrusel",
   initialState: {
     carrusels: [],
+    all_carrusels: [],
     carrusel_selected: null,
     carrusel_data_update: null,
     error: null,
@@ -295,6 +327,19 @@ export const carruselSlice = createSlice({
       state.carrusels = action.payload;
     },
     [getCarrusels.rejected]: (state, action) => {
+      state.loading_carrusel = false;
+      state.error = action.payload;
+    },
+
+    //get all carrusels
+    [getAllCarrusels.pending]: (state) => {
+      state.loading_carrusel = true;
+    },
+    [getAllCarrusels.fulfilled]: (state, action) => {
+      state.loading_carrusel = false;
+      state.all_carrusels = action.payload;
+    },
+    [getAllCarrusels.rejected]: (state, action) => {
       state.loading_carrusel = false;
       state.error = action.payload;
     },
@@ -362,6 +407,7 @@ export const {
 
 // -----------------------------------------Selector-----------------------------------------
 export const selectCarrusels = (state) => state.carrusel.carrusels;
+export const selectALlCarrusels = (state) => state.carrusel.all_carrusels;
 export const selectLoadingCarrusels = (state) =>
   state.carrusel.loading_carrusel;
 export const selectPage = (state) => state.carrusel.page;

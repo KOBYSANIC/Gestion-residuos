@@ -5,8 +5,7 @@ import { useForm } from "react-hook-form";
 import { useDispatch, useSelector } from "react-redux";
 
 import { loginToApp, selectLoading } from "../../../redux/features/userSlice";
-import {
-  Checkbox, CheckboxGroup, } from "@chakra-ui/react"
+import { Checkbox, CheckboxGroup } from "@chakra-ui/react";
 
 import InputFormValidation from "../../../components/Inputs/InputFormValidation/InputFormValidation.jsx";
 import Button from "../../../components/Buttons/Button/Button.jsx";
@@ -41,7 +40,7 @@ const LoginScreen = () => {
             marginBottom="12"
           />
           <InputFormValidation
-            Icon={faEnvelope} 
+            Icon={faEnvelope}
             placeholder="Ingresa tu correo"
             errors={errors}
             register={register}
@@ -58,7 +57,7 @@ const LoginScreen = () => {
             label="Escribe tu contraseña"
             type="password"
           />
-          
+
           <Button
             isLoading={loading}
             secondary
@@ -66,16 +65,11 @@ const LoginScreen = () => {
             type="submit"
             width="100%"
           />
-          <div style={{ maxWidth: '400px', width: '100%' }}>
-            <CheckboxGroup colorScheme="green" defaultValue={false} >
-              <Checkbox>
-                Recuérdame
-              </Checkbox>
-            </CheckboxGroup>
-          </div>
-         
+
+          <a href="/">
+            <TextContent content="Regresar al inicio" marginBottom="12" />
+          </a>
         </form>
-        
       </div>
     </div>
   );

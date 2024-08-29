@@ -13,7 +13,7 @@ const PublicRouter = ({ children }) => {
   // Si se accede a la ruta /paints, se muestra el children (componente hijo)
   const path = window.location.pathname;
 
-  if (path === "/paints") {
+  if (path === "/") {
     return children;
   }
 

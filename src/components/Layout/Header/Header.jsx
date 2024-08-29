@@ -51,35 +51,6 @@ const Header = ({ showSidebarButton = true, area = "" }) => {
             <TextContent content={user?.user_name} fontWeight="bold" />
             <TextContent content={role_name[user?.role]} />
           </Flex>
-          <Menu autoSelect={false}>
-            <MenuButton
-              as={Button}
-              height="48px"
-              borderRadius="50%"
-              p="0"
-              bg="brand.black"
-              _hover={{ bg: "brand.gray" }}
-              _active={{ bg: "brand.gray" }}
-              color="brand.secondary"
-            >
-              <FontAwesomeIcon icon={faCircleUser} size={"3x"} />
-            </MenuButton>
-            <MenuList bg="brand.black" borderColor="brand.gray_light">
-              <MenuItem
-                _hover={{ bg: "brand.gray" }}
-                _active={{ bg: "brand.gray" }}
-              >
-                <TextContent content="Mi perfil" textAlign="center" />
-              </MenuItem>
-              <MenuItem
-                _hover={{ bg: "brand.gray" }}
-                _active={{ bg: "brand.gray" }}
-                onClick={handleLogOut}
-              >
-                <TextContent content="Cerrar sesion" width="100%" />
-              </MenuItem>
-            </MenuList>
-          </Menu>
         </Flex>
       </Flex>
     </GridItem>

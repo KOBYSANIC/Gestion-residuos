@@ -24,6 +24,7 @@ import { UsuarioList, SolicitudList } from "../pages/private/Usuarios";
 
 // public
 import LoginScreen from "../pages/public/LoginScreen";
+import Home from "../pages/public/Home";
 
 export const routes = [
   // private routes
@@ -102,8 +103,15 @@ export const routes = [
   },
   // public routes
   {
-    path: "/",
+    path: "/login",
     component: LoginScreen,
+    isPrivate: false,
+    showSidebar: false,
+    accessValidate: false,
+  },
+  {
+    path: "/",
+    component: Home,
     isPrivate: false,
     showSidebar: false,
     accessValidate: false,
