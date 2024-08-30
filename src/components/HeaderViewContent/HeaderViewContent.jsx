@@ -15,11 +15,14 @@ export const HeaderViewContent = ({
   showFilterButton = true,
   showSearchButton = true,
   showCreateButton = true,
+  showExcelButton = false,
   onOpen,
   onOpenFilers,
   searchTitle = "Buscar...",
   onKeyPress = () => {},
   onChange = () => {},
+  onClickExcel = () => {},
+  loadingExcel = false,
 }) => {
   return (
     <Flex
@@ -53,6 +56,14 @@ export const HeaderViewContent = ({
         )}
         {showCreateButton && (
           <Button text={textButton} secondary onClick={onOpen} />
+        )}
+        {showExcelButton && (
+          <Button
+            text={"Exporta a Excel"}
+            onClick={onClickExcel}
+            secondary
+            isLoading={loadingExcel}
+          />
         )}
       </Flex>
     </Flex>

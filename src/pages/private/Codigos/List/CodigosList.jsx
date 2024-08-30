@@ -9,9 +9,11 @@ import { columns } from "./columns";
 
 // redux
 import {
+  generateExcel,
   getVentas,
   nextPage,
   prevPage,
+  selectLoadingExcel,
   selectLoadingVentas,
   selectPage,
   selectVentas,
@@ -29,6 +31,7 @@ const ReportesList = () => {
   const loading = useSelector(selectLoadingVentas);
   const ventasData = useSelector(selectVentas);
   const page = useSelector(selectPage);
+  const loadingExcel = useSelector(selectLoadingExcel);
 
   const nextPageTable = () => {
     dispatch(nextPage());
@@ -51,6 +54,9 @@ const ReportesList = () => {
         showCreateButton={false}
         showSearchButton={false}
         showFilterButton={false}
+        showExcelButton
+        onClickExcel={() => dispatch(generateExcel({}))}
+        loadingExcel={loadingExcel}
       />
 
       <Table

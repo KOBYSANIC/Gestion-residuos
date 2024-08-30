@@ -6,6 +6,14 @@ const statusOrder = {
   4: { name: "No recolectado", color: "red" },
 };
 
+export const statusText = {
+  0: "Generado",
+  1: "Recolectado",
+  2: "Finalizado",
+  3: "Cancelado",
+  4: "No recolectado",
+};
+
 export const convertStatus = (status) => {
   return statusOrder[status];
 };

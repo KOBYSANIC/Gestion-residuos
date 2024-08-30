@@ -13,7 +13,6 @@ import {
   limit,
   orderBy,
   query,
-  runTransaction,
   startAfter,
   updateDoc,
   where,
@@ -21,6 +20,10 @@ import {
 
 // toast
 import toast from "react-hot-toast";
+
+import { statusText } from "../../Utils/functions";
+import ExcelJS from "exceljs";
+import moment from "moment";
 // -----------------------------------------Funciones-----------------------------------------
 
 // Funcion para obtener la query global
@@ -178,6 +181,111 @@ export const getVentas = createAsyncThunk(
   }
 );
 
+const ExcelDownloadButton = async (data) => {
+  // Crear un nuevo workbook y una nueva hoja
+  const workbook = new ExcelJS.Workbook();
+  const worksheet = workbook.addWorksheet("My Sheet");
+
+  // Agregar columnas al worksheet
+  worksheet.columns = [
+    {
+      header: "Fecha de recolección solicitada",
+      key: "fecha_recoleccion",
+      width: 20,
+    },
+    {
+      header: "Fecha de recolección realizada",
+      key: "fecha_recoleccion_realizada",
+      width: 20,
+    },
+    { header: "Comentario cliente", key: "comentario_cliente", width: 30 },
+    { header: "Ubicación", key: "ubicacion", width: 30 },
+    { header: "Ruta Asignada", key: "ruta", width: 30 },
+    { header: "Cantidad", key: "cantidad", width: 5 },
+    { header: "Estado", key: "estado", width: 20 },
+    {
+      header: "Comentario reciclador",
+      key: "comentario_reciclador",
+      width: 30,
+    },
+    { header: "Monto cobrado", key: "monto_cobrado", width: 10 },
+  ];
+
+  // Agregar filas con datos
+  data?.map((venta) => {
+    worksheet.addRow({
+      fecha_recoleccion: venta?.fecha_recoleccion,
+      fecha_recoleccion_realizada: venta?.fecha_recoleccion_reciclador,
+      comentario_cliente: venta?.comentario,
+      ubicacion: venta?.ubicacion,
+      ruta: `${venta?.ruta?.nombre_ruta || ""} - ${
+        venta?.ruta?.vehiculo_id?.placa || ""
+      }`,
+      cantidad: venta?.residuos?.length || 0,
+      estado: statusText[venta?.estado],
+      comentario_reciclador: venta?.comentario_reciclador,
+      monto_cobrado: venta?.monto_cobrado,
+    });
+  });
+
+  worksheet.getRow(1).font = { bold: true };
+
+  // Generar el archivo Excel
+  const buffer = await workbook.xlsx.writeBuffer();
+
+  // Crear un enlace temporal para descargar el archivo
+  const blob = new Blob([buffer], {
+    type: "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet",
+  });
+  const url = URL.createObjectURL(blob);
+
+  // Crear un enlace de descarga y hacer clic en él automáticamente
+  const link = document.createElement("a");
+  link.href = url;
+  link.download = `${moment
+    .utc()
+    .format("YYYY-MM-DD_HH:mm:ss")}_reporte_recolecciones.xlsx`;
+  link.click();
+
+  // Limpiar el objeto URL después de descargar
+  URL.revokeObjectURL(url);
+};
+// Funcion para obtener todos los ventas de la base de datos
+export const generateExcel = createAsyncThunk(
+  "venta/generateExcel",
+  async (
+    { isNextPage, isPrevPage, search = "", filter = {} },
+    { rejectWithValue, getState, dispatch }
+  ) => {
+    try {
+      const ventas = [];
+
+      const ventasCollection = collection(db, "residuos");
+
+      let querySnapshot = null;
+
+      querySnapshot = await getDocs(
+        query(
+          ventasCollection,
+          where("active", "==", true),
+          orderBy("fecha_recoleccion", "desc")
+        )
+      );
+
+      querySnapshot.forEach((doc) => {
+        ventas.push({ ...doc.data(), id: doc.id });
+      });
+
+      await ExcelDownloadButton(ventas);
+      return ventas;
+    } catch (err) {
+      console.log(err);
+      toast.error(err.message);
+      return rejectWithValue(err);
+    }
+  }
+);
+
 export const getOrder = createAsyncThunk(
   "venta/getOrder",
   async (order_id, { rejectWithValue }) => {
@@ -249,6 +357,7 @@ export const ventaSlice = createSlice({
     venta_selected: null,
     error: null,
     loading_venta: false,
+    loading_excel: false,
     loading_actions: false,
     firstVisible: null,
     lastVisible: null,
@@ -286,6 +395,19 @@ export const ventaSlice = createSlice({
       state.loading_venta = false;
       state.error = action.payload;
     },
+
+    [generateExcel.pending]: (state) => {
+      state.loading_excel = true;
+    },
+    [generateExcel.fulfilled]: (state, action) => {
+      state.loading_excel = false;
+      // state.ventas = action.payload;
+    },
+    [generateExcel.rejected]: (state, action) => {
+      state.loading_excel = false;
+      state.error = action.payload;
+    },
+
     [changeState.pending]: (state, action) => {
       state.loading_actions = true;
     },
@@ -321,6 +443,7 @@ export const {
 // -----------------------------------------Selector-----------------------------------------
 export const selectVentas = (state) => state.venta.ventas;
 export const selectLoadingVentas = (state) => state.venta.loading_venta;
+export const selectLoadingExcel = (state) => state.venta.loading_excel;
 export const selectPage = (state) => state.venta.page;
 export const selectVentaSelected = (state) => state.venta.venta_selected;
 export const selectLoadingActions = (state) => state.venta.loading_actions;
