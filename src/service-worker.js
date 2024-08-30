@@ -53,7 +53,7 @@ registerRoute(
   ({ url }) =>
     url.origin === self.location.origin && url.pathname.endsWith(".png"), // Customize this strategy as needed, e.g., by changing to CacheFirst.
   new StaleWhileRevalidate({
-    cacheName: "v1.03_residuos_admin",
+    cacheName: "v1.04_residuos_admin",
     plugins: [
       // Ensure that once this runtime cache reaches a maximum size the
       // least-recently used images are removed.

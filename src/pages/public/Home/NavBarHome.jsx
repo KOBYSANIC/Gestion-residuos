@@ -69,7 +69,7 @@ export default function NavBarHome() {
           direction={"row"}
           spacing={6}
         >
-          <ChakraButton
+          {/* <ChakraButton
             as={"a"}
             fontSize={"sm"}
             fontWeight={400}
@@ -78,7 +78,7 @@ export default function NavBarHome() {
             href={"#"}
           >
             Regístrate
-          </ChakraButton>
+          </ChakraButton> */}
           <Button
             height="30px"
             secondary
