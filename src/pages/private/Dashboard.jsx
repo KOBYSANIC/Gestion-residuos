@@ -30,15 +30,15 @@ const Dashboard = ({ children }) => {
               "main"`,
           md: `"side nav"
               "side main"`,
-          lg: `"side nav sideright"
-            "side main sideright"`,
+          lg: `"side nav"
+            "side main "`,
         }}
         gridTemplateRows={"70px 1fr"}
         gridTemplateColumns={{
           base: "1fr",
           md: "90px 1fr",
-          lg: "90px 1fr 256px",
-          xl: "256px 1fr 330px",
+          lg: "90px 1fr ",
+          xl: "256px 1fr ",
         }}
         maxHeight="100vh"
         gap="5"
@@ -59,11 +59,11 @@ const Dashboard = ({ children }) => {
         </GridItem>
 
         {/* ----Grid item for sidebar right---- */}
-        {isDesktopSmall && (
+        {/* {isDesktopSmall && (
           <Suspense fallback={<SidebarRightLoading />}>
             <SidebarRight area="sideright" />
           </Suspense>
-        )}
+        )} */}
       </Grid>
     </>
   );
