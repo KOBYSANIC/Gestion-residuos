@@ -1,8 +1,6 @@
 // icons
 import {
   faBoxesStacked,
-  faCartShopping,
-  faMoneyBillTransfer,
   faSliders,
   faTags,
   faUsers,
@@ -16,11 +14,10 @@ import { ADMINISTRADOR, CLIENTE, TRANSPORTISTA } from "../Utils/constants";
 // private
 import { ProductosList } from "../pages/private/Productos";
 import { CategoriasList, MarcasList } from "../pages/private/CategoriasMarcas";
-import { MonedasList, BancosList } from "../pages/private/GestionMonedas";
-import { VentasList, TokensList } from "../pages/private/Ventas";
+import { VentasList } from "../pages/private/Ventas";
 import { CodigosList } from "../pages/private/Codigos";
-import { CarruselList, PreguntasList } from "../pages/private/Ajustes";
-import { UsuarioList, SolicitudList } from "../pages/private/Usuarios";
+import { CarruselList } from "../pages/private/Ajustes";
+import { UsuarioList } from "../pages/private/Usuarios";
 
 // public
 import LoginScreen from "../pages/public/LoginScreen";
@@ -52,7 +49,7 @@ export const routes = [
     path: "/rutas",
     isPrivate: true,
     showSidebar: true,
-    accessValidate: [ADMINISTRADOR],
+    accessValidate: [ADMINISTRADOR, TRANSPORTISTA],
     subMenu: [
       {
         name: "Rutas",
@@ -74,7 +71,7 @@ export const routes = [
     component: CodigosList,
     isPrivate: true,
     showSidebar: true,
-    accessValidate: [ADMINISTRADOR],
+    accessValidate: [ADMINISTRADOR, TRANSPORTISTA],
   },
   {
     name: "Ajustes",

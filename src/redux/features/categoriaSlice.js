@@ -233,7 +233,7 @@ export const updateCategoria = createAsyncThunk(
 
             // Actualizar el documento con los nuevos datos
             transaction.update(docRef, {
-              ruta: { ...data },
+              ruta: { ...data, id },
             });
           });
         });

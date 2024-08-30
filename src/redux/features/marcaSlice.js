@@ -234,7 +234,7 @@ export const updateMarca = createAsyncThunk(
 
             // Actualizar el documento con los nuevos datos
             transaction.update(docRefProducto, {
-              vehiculo_id: { ...data },
+              vehiculo_id: { ...data, id },
             });
           });
 
@@ -255,7 +255,7 @@ export const updateMarca = createAsyncThunk(
             transaction.update(docRefProducto, {
               ruta: {
                 ...doc.data().ruta,
-                vehiculo_id: { ...data },
+                vehiculo_id: { ...data, id },
               },
             });
           });
