@@ -11,6 +11,8 @@ import {
   useColorModeValue,
 } from "@chakra-ui/react";
 
+
+
 const Logo = (props) => {
   return (
     <svg
@@ -109,15 +111,12 @@ export default function Footer() {
             </Box>
           </Stack>
           <Stack align={"flex-start"}>
-            <ListHeader>Follow Us</ListHeader>
+            <ListHeader>Sigue nuestras redes sociales</ListHeader>
             <Box as="a" href={"#"}>
               Facebook
             </Box>
             <Box as="a" href={"#"}>
               Twitter
-            </Box>
-            <Box as="a" href={"#"}>
-              Dribbble
             </Box>
             <Box as="a" href={"#"}>
               Instagram
@@ -149,7 +148,7 @@ export default function Footer() {
           <Logo />
         </Flex>
         <Text pt={6} fontSize={"sm"} textAlign={"center"}>
-          © 2022 Chakra Templates. All rights reserved
+          © 2024 Koby Saníc Todos los derechos reservados
         </Text>
       </Box>
     </Box>

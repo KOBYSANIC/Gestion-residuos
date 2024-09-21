@@ -28,7 +28,7 @@ const CrearActualizar = ({ isOpen, onClose }) => {
   const marcaSelected = useSelector(selectMarcaDataUpdate);
   const loading = useSelector(loadingActions);
   const isUpdate = useSelector(selectIsUpdate);
-  const modalTitle = isUpdate ? "Editar Vehículo" : "Nueva Vehículo";
+  const modalTitle = isUpdate ? "Editar Vehículo" : "Nuevo Vehículo";
   const buttonTitle = isUpdate ? "Actualizar Vehículo" : "Agregar Vehículo";
 
   const {

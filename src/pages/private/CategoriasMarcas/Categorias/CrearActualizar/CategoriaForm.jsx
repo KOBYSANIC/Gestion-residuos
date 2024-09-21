@@ -33,7 +33,7 @@ const CategoriaForm = ({ errors, register, control }) => {
         errors={errors}
         control={control}
         key_name="vehiculo_id"
-        label="Selecciona la categoria del producto"
+        label="Selecciona el vehículo"
         validation
         valueKey="id"
         labelKey="placa"

@@ -28,8 +28,8 @@ const CrearActualizar = ({ isOpen, onClose }) => {
   const categoriaSelected = useSelector(selectCategoriaDataUpdate);
   const loading = useSelector(loadingActions);
   const isUpdate = useSelector(selectIsUpdate);
-  const modalTitle = isUpdate ? "Editar Categoria" : "Nueva Categoria";
-  const buttonTitle = isUpdate ? "Actualizar Categoria" : "Agregar Categoria";
+  const modalTitle = isUpdate ? "Editar Ruta" : "Nueva Ruta";
+  const buttonTitle = isUpdate ? "Actualizar Ruta" : "Agregar Ruta";
 
   const {
     register,

@@ -17,9 +17,10 @@ import {
 } from "../../../redux/features/carruselSlice";
 import { useDispatch, useSelector } from "react-redux";
 
-import { FaTree } from "react-icons/fa";
-import { FaTrash } from "react-icons/fa";
-import { FaCloudSun } from "react-icons/fa";
+
+import { FaArrowAltCircleDown } from "react-icons/fa";
+import { GiWaterRecycling } from "react-icons/gi";
+import { MdOutlineRecycling } from "react-icons/md";
 import { CheckIcon } from "@chakra-ui/icons";
 import Footer from "./Footer";
 import NavBarHome from "./NavBarHome";
@@ -71,13 +72,14 @@ const Home = () => {
         <VStack spacing={2} textAlign="center">
           <Heading as="h1" fontSize="4xl">
             <Flex justifyContent="center">
-              Plans <Text color="green">&nbsp;that&nbsp;</Text> fit your need
+              Guía de las <Text color="green">&nbsp;3R's&nbsp;</Text> para tu organización
             </Flex>
-            <Flex justifyContent="center">otro texto</Flex>
+          <Flex justifyContent="center">y/o hogar</Flex>
           </Heading>
           <Text fontSize="lg" color={"gray.100"}>
-            Start with 14-day free trial. No credit card needed. Cancel at
-            anytime.
+            Las tres erres (3R) es una regla para cuidar el medio ambiente, específicamente
+            para reducir el volumen de residuos o basura generada. Esta regla debe estar incluida en el decálogo 
+            de la empresa socialmente responsable.
           </Text>
         </VStack>
         <Flex justifyContent="center" mt={6} gap={16} flexWrap="wrap">
@@ -94,14 +96,13 @@ const Home = () => {
             p={6}
           >
             <Box color="green.900">
-              <FaTree size={"70px"} />
+              <FaArrowAltCircleDown size={"70px"}/>
             </Box>
             <Text fontSize="xl" fontWeight="bold">
-              CARD 1
+              Reducir
             </Text>
             <Text fontSize="lg" textAlign="center" color={"gray.100"}>
-              Start with 14-day free trial. No credit card needed. Cancel at
-              anytime.
+              Trata de reducir o simplificar el consumo de los productos directo, o sea, todo aquello que se compra y se consume. 
             </Text>
           </Flex>
           <Flex
@@ -117,14 +118,13 @@ const Home = () => {
             p={6}
           >
             <Box color="orange.900">
-              <FaTrash size={"70px"} />
+              <GiWaterRecycling size={"70px"} />
             </Box>
             <Text fontSize="xl" fontWeight="bold">
-              CARD 2
+              Reutilizar
             </Text>
             <Text fontSize="lg" textAlign="center" color={"gray.100"}>
-              Start with 14-day free trial. No credit card needed. Cancel at
-              anytime.
+              Se refiere a poder volver a utilizar las cosas y darles la mayor utilidad posible andes de desahacernos de ellas.
             </Text>
           </Flex>
           <Flex
@@ -140,14 +140,13 @@ const Home = () => {
             p={6}
           >
             <Box color="yellow.800">
-              <FaCloudSun size={"70px"} />
+              <MdOutlineRecycling size={"70px"} />
             </Box>
             <Text fontSize="xl" fontWeight="bold">
-              CARD 3
+              Reciclar
             </Text>
             <Text fontSize="lg" textAlign="center" color={"gray.100"}>
-              Start with 14-day free trial. No credit card needed. Cancel at
-              anytime.
+              Consiste en el proceso de someter los materiales a un proceso en el cual puedan volver a utilizar.
             </Text>
           </Flex>
         </Flex>
@@ -157,16 +156,16 @@ const Home = () => {
         justifyContent="center"
         flexWrap={{ base: "wrap", md: "nowrap" }}
       >
-        <Box maxW={"900px"} p={4} w="full">
+        <Box maxW={"800px"} p={4} w="full">
           <Heading as="h1" fontSize="4xl">
             <Flex>
-              Plans <Text color="green">&nbsp;that&nbsp;</Text> fit your need
-            </Flex>
-            <Flex>otro texto</Flex>
+              Recomendaciones para<Text color="green">&nbsp;Reducir&nbsp;</Text> el 
+              uso </Flex>
+            <Flex>de bolsas plásticas</Flex>
           </Heading>
           <Text fontSize="lg" color={"gray.400"}>
-            Start with 14-day free trial. No credit card needed. Cancel at
-            anytime.asdf
+          10% de las bolsas terminan en las costas, y en general despiden tóxicos que 
+          contaminan a la gente que maneja la basura, a los que las consumen, y a futuras generaciones.
           </Text>
 
           <Flex mt={16} flexDirection="column" gap={4}>
@@ -184,8 +183,7 @@ const Home = () => {
                 <CheckIcon color="white" />
               </Flex>
               <Text fontSize="lg" color="gray.100" ml={4}>
-                Start with 14-day free trial. No credit card needed. Cancel at
-                anytime.
+                Cuando vayas a la tienda y compres dos o tres productos que bien te puedes llevar con la mano, NO aceptes bolsas de plástico.
               </Text>
             </Flex>
 
@@ -203,8 +201,7 @@ const Home = () => {
                 <CheckIcon color="white" />
               </Flex>
               <Text fontSize="lg" color="gray.100" ml={4}>
-                Start with 14-day free trial. No credit card needed. Cancel at
-                anytime.
+                Trata de llevar tus propias bolsas de tela.
               </Text>
             </Flex>
 
@@ -222,10 +219,27 @@ const Home = () => {
                 <CheckIcon color="white" />
               </Flex>
               <Text fontSize="lg" color="gray.100" ml={4}>
-                Start with 14-day free trial. No credit card needed. Cancel at
-                anytime.
+                Si requieres una bolsa de plástico (puede ser de las de DHL o cualquier otra), pregunta en recepción.
               </Text>
             </Flex>
+            <Flex>
+              <Flex
+                borderRadius={"50%"}
+                bgColor="green.600"
+                w={"20px"}
+                h={"20px"}
+                display="flex"
+                alignItems="center"
+                justifyContent="center"
+                p={4}
+              >
+                <CheckIcon color="white" />
+              </Flex>
+              <Text fontSize="lg" color="gray.100" ml={4}>
+                Si ya no vas a usar una bolsa, déjala de igual manera en recepción.
+              </Text>
+            </Flex>
+
 
             <Flex>
               <Flex
@@ -241,14 +255,13 @@ const Home = () => {
                 <CheckIcon color="white" />
               </Flex>
               <Text fontSize="lg" color="gray.100" ml={4}>
-                Start with 14-day free trial. No credit card needed. Cancel at
-                anytime.
+                No debe de haber ninguna bolsa en el bote de basura personal.
               </Text>
             </Flex>
           </Flex>
         </Box>
         <Image
-          src="https://img.freepik.com/free-photo/vertical-shot-beautiful-mountain-valley-with-green-trees-covered-mild-fog_181624-5095.jpg?t=st=1722045419~exp=1722049019~hmac=197b2f6606f1ba08368fb638634c8509c80752beffaab6efb80344df58352d48&w=740"
+          src="https://img.freepik.com/fotos-premium/iniciativa-comunitaria-reciclajeen-iniciativa-viajes-sostenibles-son-sostenibles_1010572-23762.jpg?w=740"
           width="400px"
           borderRadius="20px"
           border="4px solid"

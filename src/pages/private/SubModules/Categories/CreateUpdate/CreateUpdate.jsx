@@ -22,7 +22,7 @@ const CreateUpdate = ({ isOpen, onClose }) => {
   const loading = useSelector(selectLoadingupdateCategory);
   const isUpdate = useSelector(selectIsUpdate);
   const dispatch = useDispatch();
-  const modalTitle = isUpdate ? "Editar categoria" : "Nueva categoria";
+  const modalTitle = isUpdate ? "Editar categoria" : "";
   const buttonTitle = isUpdate ? "Actualizar categoria" : "Agregar categoria";
 
   const {

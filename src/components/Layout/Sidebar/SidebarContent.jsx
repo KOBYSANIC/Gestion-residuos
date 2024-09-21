@@ -7,6 +7,7 @@ import { routes } from "../../../routers/routes";
 import { faRightToBracket } from "@fortawesome/free-solid-svg-icons";
 import Subtitle from "../../Texts/Subtitle";
 import { useTypeDevice } from "../../../hooks/useTypeDevice";
+import TextContent from "../../Texts/TextContent";
 
 export const SidebarContent = ({ onMobile = false }) => {
   const [activeButton, setActiveButton] = useState(null);
@@ -40,6 +41,9 @@ export const SidebarContent = ({ onMobile = false }) => {
       h={"full"}
       overflow="auto"
     >
+      <a href="/">
+        <TextContent content="Regresar al inicio" />
+      </a>
       <Subtitle
         content="Menú"
         my={{ base: "4", md: "10" }}

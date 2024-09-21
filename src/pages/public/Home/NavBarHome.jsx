@@ -55,7 +55,7 @@ export default function NavBarHome() {
             textAlign={useBreakpointValue({ base: "center", md: "left" })}
             fontFamily={"heading"}
           >
-            Logo
+            Muni Comalapa
           </Text>
 
           <Flex display={{ base: "none", md: "flex" }} ml={10}>
@@ -82,7 +82,7 @@ export default function NavBarHome() {
           <Button
             height="30px"
             secondary
-            text="Inicial Sesión"
+            text="Iniciar Sesión"
             width="100%"
             href="/login"
           />
@@ -274,11 +274,11 @@ const NAV_ITEMS = [
   //   ],
   // },
   {
-    label: "Learn Design",
+    label: "Aprende",
     href: "#",
   },
   {
-    label: "Hire Designers",
+    label: "Contribuye",
     href: "#",
   },
 ];
