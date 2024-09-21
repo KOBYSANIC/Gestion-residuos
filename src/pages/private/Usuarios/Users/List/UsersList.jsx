@@ -36,10 +36,6 @@ const UsersList = () => {
         accessor: "email",
       },
       {
-        Header: "Proveedor",
-        accessor: "typed",
-      },
-      {
         Header: "Rol",
         accessor: "role",
         Cell: ({ value }) => role_name[value],

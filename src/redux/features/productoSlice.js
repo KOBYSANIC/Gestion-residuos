@@ -101,7 +101,7 @@ export const getProductos = createAsyncThunk(
         const next = query(
           productosCollection,
           where("active", "==", true),
-          orderBy("nombre_producto", order_by),
+          orderBy("fecha_recoleccion", order_by),
           startAfter(isNextPage ? lastVisible : firstVisible),
           limit(10)
         );
