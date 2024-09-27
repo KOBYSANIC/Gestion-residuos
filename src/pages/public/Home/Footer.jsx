@@ -47,82 +47,16 @@ export default function Footer() {
       <Container as={Stack} maxW={"6xl"} py={10}>
         <SimpleGrid columns={{ base: 1, sm: 2, md: 4 }} spacing={8}>
           <Stack align={"flex-start"}>
-            <ListHeader>Product</ListHeader>
-            <Box as="a" href={"#"}>
-              Overview
-            </Box>
-            <Stack direction={"row"} align={"center"} spacing={2}>
-              <Box as="a" href={"#"}>
-                Features
-              </Box>
-              <Tag
-                size={"sm"}
-                bg={useColorModeValue("green.300", "green.800")}
-                ml={2}
-                color={"white"}
-              >
-                New
-              </Tag>
-            </Stack>
-            <Box as="a" href={"#"}>
-              Tutorials
-            </Box>
-            <Box as="a" href={"#"}>
-              Pricing
-            </Box>
-            <Box as="a" href={"#"}>
-              Releases
-            </Box>
-          </Stack>
-          <Stack align={"flex-start"}>
-            <ListHeader>Company</ListHeader>
-            <Box as="a" href={"#"}>
-              About Us
-            </Box>
-            <Box as="a" href={"#"}>
-              Press
-            </Box>
-            <Box as="a" href={"#"}>
-              Careers
-            </Box>
-            <Box as="a" href={"#"}>
-              Contact Us
-            </Box>
-            <Box as="a" href={"#"}>
-              Partners
-            </Box>
-          </Stack>
-          <Stack align={"flex-start"}>
-            <ListHeader>Legal</ListHeader>
-            <Box as="a" href={"#"}>
-              Cookies Policy
-            </Box>
-            <Box as="a" href={"#"}>
-              Privacy Policy
-            </Box>
-            <Box as="a" href={"#"}>
-              Terms of Service
-            </Box>
-            <Box as="a" href={"#"}>
-              Law Enforcement
-            </Box>
-            <Box as="a" href={"#"}>
-              Status
-            </Box>
-          </Stack>
-          <Stack align={"flex-start"}>
             <ListHeader>Sigue nuestras redes sociales</ListHeader>
-            <Box as="a" href={"#"}>
+            <Box as="a" href={"https://www.facebook.com/municomalapa"}>
               Facebook
             </Box>
-            <Box as="a" href={"#"}>
-              Twitter
-            </Box>
-            <Box as="a" href={"#"}>
+            <Box as="a" href={"https://www.instagram.com/san_juan_comalapa/"}>
               Instagram
             </Box>
-            <Box as="a" href={"#"}>
-              LinkedIn
+            <Box as="a" href={"https://municomalapa.gob.gt/"}>
+              Página principal Municpalidad 
+              de San Juan comalapa
             </Box>
           </Stack>
         </SimpleGrid>
@@ -145,7 +79,6 @@ export default function Footer() {
             ml: 8,
           }}
         >
-          <Logo />
         </Flex>
         <Text pt={6} fontSize={"sm"} textAlign={"center"}>
           © 2024 Koby Saníc Todos los derechos reservados

@@ -78,7 +78,7 @@ const getQueryFilter = (ventasCollection, search, filter, sort = "desc") => {
   return q;
 };
 
-// Funcion para obtener todos los ventas de la base de datos
+// Funcion para obtener todos los residuos de la base de datos
 export const getVentas = createAsyncThunk(
   "venta/getVentas",
   async (
